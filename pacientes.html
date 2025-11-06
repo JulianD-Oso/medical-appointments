@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pacientes - Clínica Maxi Dent</title>
+  <style>
+    body {
+      background: #e0fdfa;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 18px 4px #9ff4e6;
+      padding: 32px;
+    }
+    h1 {
+      color: #00bfae;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #00bfae;
+      text-align: center;
+    }
+    th {
+      background: #00bfae;
+      color: #fff;
+      font-size: 18px;
+    }
+    tr:nth-child(even) {
+      background: #e0fdfa;
+    }
+    tr:hover {
+      background: #baf1ec;
+      transition: 0.3s;
+    }
+    .form-container {
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    .form-container h2 {
+      color: #00bfae;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .btn {
+      background-color: #00bfae;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background-color: #00a093;
+    }
+    .btn-danger {
+      background-color: #f44336;
+    }
+    .btn-danger:hover {
+      background-color: #da190b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lista de Pacientes - Maxi Dent</h1>
+
+    <div class="form-container">
+      <h2>Crear Nuevo Paciente</h2>
+      <form id="formCrearPaciente">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="telefono">Teléfono:</label>
+          <input type="number" id="telefono" name="telefono" required>
+        </div>
+        <button type="submit" class="btn">Guardar Paciente</button>
+      </form>
+    </div>
+
+    <table id="tablaPacientes">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Aquí se mostrará la tabla -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const apiBaseUrl = 'webhook/api/patients';
+      const tablaPacientes = document.querySelector('#tablaPacientes tbody');
+      const formCrearPaciente = document.getElementById('formCrearPaciente');
+      const nombreInput = document.getElementById('nombre');
+      const telefonoInput = document.getElementById('telefono');
+      const submitButton = formCrearPaciente.querySelector('button[type="submit"]');
+
+      const getPacientes = async () => {
+        try {
+          const response = await fetch(apiBaseUrl);
+          if (!response.ok) {
+            throw new Error('Error al obtener los pacientes');
+          }
+          const pacientes = await response.json();
+          renderPacientes(pacientes);
+        } catch (error) {
+          console.error('Error:', error);
+          alert('No se pudo cargar la lista de pacientes.');
+        }
+      };
+
+      const renderPacientes = (pacientes) => {
+        tablaPacientes.innerHTML = '';
+        if (pacientes.length === 0) {
+          const fila = document.createElement('tr');
+          fila.innerHTML = `<td colspan="4">No hay pacientes registrados.</td>`;
+          tablaPacientes.appendChild(fila);
+        } else {
+          pacientes.forEach(paciente => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+              <td>${paciente.id_paciente}</td>
+              <td>${paciente.nombre}</td>
+              <td>${paciente.telefono}</td>
+              <td>
+                <button class="btn btn-danger btn-eliminar" data-id="${paciente.id_paciente}">Eliminar</button>
+              </td>
+            `;
+            tablaPacientes.appendChild(fila);
+          });
+        }
+      };
+
+      formCrearPaciente.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nombre = nombreInput.value.trim();
+        const telefono = telefonoInput.value.trim();
+
+        if (!nombre || !telefono) {
+          alert('Por favor, complete todos los campos.');
+          return;
+        }
+
+        submitButton.textContent = 'Guardando...';
+        submitButton.disabled = true;
+
+        try {
+          const response = await fetch(apiBaseUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nombre, telefono }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Error al crear el paciente.');
+          }
+
+          formCrearPaciente.reset();
+          await getPacientes();
+          alert('Paciente creado con éxito.');
+
+        } catch (error) {
+          console.error('Error:', error);
+          alert('No se pudo crear el paciente.');
+        } finally {
+          submitButton.textContent = 'Guardar Paciente';
+          submitButton.disabled = false;
+        }
+      });
+
+      tablaPacientes.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('btn-eliminar')) {
+          const id_paciente = e.target.getAttribute('data-id');
+          
+          if (confirm('¿Estás seguro de que deseas eliminar este paciente?')) {
+            try {
+              const response = await fetch(apiBaseUrl, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id_paciente: parseInt(id_paciente) }),
+              });
+
+              if (!response.ok) {
+                throw new Error('Error al eliminar el paciente.');
+              }
+
+              await getPacientes();
+              alert('Paciente eliminado con éxito.');
+
+            } catch (error) {
+              console.error('Error:', error);
+              alert('No se pudo eliminar el paciente.');
+            }
+          }
+        }
+      });
+
+      getPacientes();
+    });
+  </script>
+</body>
+</html>
