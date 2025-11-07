@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Maxi Dent</title>
+    <link rel="stylesheet" href="styles/home.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Loading state -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loading-spinner"></div>
+            <p>Cargando...</p>
+        </div>
+
+        <!-- Main content (hidden initially) -->
+        <div id="main-content" class="main-content" style="display: none;">
+            <!-- Sidebar will be injected here -->
+            <div id="sidebar-container"></div>
+            
+            <!-- Main area -->
+            <div class="main-area">
+                <header class="header">
+                    <div class="header-content">
+                        <h1>Bienvenido a Maxi Dent</h1>
+                        <div class="user-info">
+                            <span id="user-name"></span>
+                            <button id="logout-btn" class="logout-btn">Cerrar Sesión</button>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="content">
+                    <div class="dashboard">
+                        <div class="dashboard-grid">
+                            <div class="card">
+                                <div class="card-icon">👥</div>
+                                <h3>Pacientes</h3>
+                                <p>Gestiona la información de tus pacientes</p>
+                                <a href="pacientes.html" class="card-link">Ver Pacientes</a>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-icon">📅</div>
+                                <h3>Citas</h3>
+                                <p>Administra las citas y horarios</p>
+                                <a href="#" class="card-link">Ver Citas</a>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-icon">📊</div>
+                                <h3>Reportes</h3>
+                                <p>Consulta reportes y estadísticas</p>
+                                <a href="#" class="card-link">Ver Reportes</a>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-icon">⚙️</div>
+                                <h3>Configuración</h3>
+                                <p>Configura tu cuenta y preferencias</p>
+                                <a href="#" class="card-link">Configurar</a>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Error state -->
+        <div id="error-screen" class="error-screen" style="display: none;">
+            <div class="error-content">
+                <h2>Error de Autenticación</h2>
+                <p>No se pudo validar tu sesión. Por favor, inicia sesión nuevamente.</p>
+                <button id="retry-login" class="btn btn-primary">Ir al Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { isAuthenticated, getCurrentUser, requireAuth, clearSession } from './utils/session.js';
+        import { createSidebar } from './components/sidebar.js';
+
+        class HomePage {
+            constructor() {
+                this.loadingScreen = document.getElementById('loading-screen');
+                this.mainContent = document.getElementById('main-content');
+                this.errorScreen = document.getElementById('error-screen');
+                this.userNameElement = document.getElementById('user-name');
+                this.logoutBtn = document.getElementById('logout-btn');
+                this.retryLoginBtn = document.getElementById('retry-login');
+            }
+
+            async init() {
+                try {
+                    // Validate session
+                    if (!this.validateSession()) {
+                        return;
+                    }
+
+                    // Initialize page
+                    await this.initializePage();
+                    
+                    // Show main content
+                    this.showMainContent();
+                    
+                } catch (error) {
+                    console.error('Error initializing home page:', error);
+                    this.showError();
+                }
+            }
+
+            validateSession() {
+                try {
+                    // Check if user is authenticated
+                    if (!isAuthenticated()) {
+                        console.log('No valid session found, redirecting to login...');
+                        window.location.href = '/login.html';
+                        return false;
+                    }
+
+                    // Get current user
+                    const currentUser = getCurrentUser();
+                    if (!currentUser) {
+                        console.log('No user data found, redirecting to login...');
+                        window.location.href = '/login.html';
+                        return false;
+                    }
+
+                    return true;
+                } catch (error) {
+                    console.error('Error validating session:', error);
+                    this.showError();
+                    return false;
+                }
+            }
+
+            async initializePage() {
+                try {
+                    // Get current user
+                    const currentUser = getCurrentUser();
+                    
+                    // Update user name in header
+                    this.userNameElement.textContent = currentUser.username || 'Usuario';
+
+                    // Create and inject sidebar
+                    const sidebarContainer = document.getElementById('sidebar-container');
+                    const sidebar = createSidebar({
+                        user: currentUser,
+                        activeItem: 'home'
+                    });
+                    sidebarContainer.appendChild(sidebar);
+
+                    // Setup event listeners
+                    this.setupEventListeners();
+
+                } catch (error) {
+                    console.error('Error initializing page components:', error);
+                    throw error;
+                }
+            }
+
+            setupEventListeners() {
+                // Logout button
+                this.logoutBtn.addEventListener('click', () => {
+                    this.handleLogout();
+                });
+
+                // Retry login button
+                this.retryLoginBtn.addEventListener('click', () => {
+                    window.location.href = '/login.html';
+                });
+
+                // Handle visibility change to extend session
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden && isAuthenticated()) {
+                        // Extend session when user returns to the page
+                        import('./utils/session.js').then(module => {
+                            module.extendSession();
+                        });
+                    }
+                });
+            }
+
+            handleLogout() {
+                try {
+                    // Clear session
+                    clearSession();
+                    
+                    // Redirect to login
+                    window.location.href = '/login.html';
+                } catch (error) {
+                    console.error('Error during logout:', error);
+                    alert('Error al cerrar sesión. Por favor, intente nuevamente.');
+                }
+            }
+
+            showMainContent() {
+                this.loadingScreen.style.display = 'none';
+                this.mainContent.style.display = 'flex';
+                this.errorScreen.style.display = 'none';
+            }
+
+            showError() {
+                this.loadingScreen.style.display = 'none';
+                this.mainContent.style.display = 'none';
+                this.errorScreen.style.display = 'flex';
+            }
+        }
+
+        // Initialize the page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const homePage = new HomePage();
+            homePage.init();
+        });
+    </script>
+</body>
+</html>

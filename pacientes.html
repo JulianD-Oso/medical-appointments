@@ -3,48 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <title>Pacientes - Clínica Maxi Dent</title>
+  <link rel="stylesheet" href="styles/sidebar.css">
   <style>
     body {
       background: #e0fdfa;
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      display: flex;
+      min-height: 100vh;
     }
+    
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      margin-left: 280px;
+      transition: margin-left 0.3s ease;
+    }
+    
+    .main-content.sidebar-collapsed {
+      margin-left: 80px;
+    }
+    
     .container {
       max-width: 800px;
-      margin: 40px auto;
+      margin: 0 auto;
       background: #fff;
       border-radius: 16px;
       box-shadow: 0 4px 18px 4px #9ff4e6;
       padding: 32px;
     }
+    
     h1 {
       color: #00bfae;
       text-align: center;
     }
+    
     table {
       width: 100%;
       border-collapse: collapse;
       background: #fff;
       margin-top: 20px;
     }
+    
     th, td {
       padding: 12px;
       border: 1px solid #00bfae;
       text-align: center;
     }
+    
     th {
       background: #00bfae;
       color: #fff;
       font-size: 18px;
     }
+    
     tr:nth-child(even) {
       background: #e0fdfa;
     }
+    
     tr:hover {
       background: #baf1ec;
       transition: 0.3s;
     }
+    
     .form-container {
       margin-bottom: 20px;
       padding: 20px;
@@ -52,25 +74,30 @@
       border-radius: 8px;
       border: 1px solid #ddd;
     }
+    
     .form-container h2 {
       color: #00bfae;
       text-align: center;
       margin-bottom: 20px;
     }
+    
     .form-group {
       margin-bottom: 15px;
     }
+    
     .form-group label {
       display: block;
       margin-bottom: 5px;
       font-weight: bold;
     }
+    
     .form-group input {
       width: 100%;
       padding: 8px;
       border-radius: 4px;
       border: 1px solid #ccc;
     }
+    
     .btn {
       background-color: #00bfae;
       color: white;
@@ -80,19 +107,99 @@
       cursor: pointer;
       font-size: 16px;
     }
+    
     .btn:hover {
       background-color: #00a093;
     }
+    
     .btn-danger {
       background-color: #f44336;
     }
+    
     .btn-danger:hover {
       background-color: #da190b;
+    }
+    
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #00bfae;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .error-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .error-content {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .error-content h2 {
+      color: #f44336;
+      margin-bottom: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+        padding: 10px;
+      }
+      
+      .main-content.sidebar-collapsed {
+        margin-left: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-spinner"></div>
+  </div>
+  
+  <div class="error-screen" id="errorScreen">
+    <div class="error-content">
+      <h2>Error de Autenticación</h2>
+      <p id="errorMessage">No tiene permisos para acceder a esta página.</p>
+      <button onclick="window.location.href='/login.html'" class="btn">Ir al Login</button>
+    </div>
+  </div>
+  
+  <!-- Sidebar Component -->
+  <div id="sidebarContainer"></div>
+  
+  <div class="main-content" id="mainContent" style="display: none;">
+    <div class="container">
     <h1>Lista de Pacientes - Maxi Dent</h1>
 
     <div class="form-container">
@@ -127,7 +234,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const apiBaseUrl = 'webhook/api/patients';
+      const apiBaseUrl = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/patients';
       const tablaPacientes = document.querySelector('#tablaPacientes tbody');
       const formCrearPaciente = document.getElementById('formCrearPaciente');
       const nombreInput = document.getElementById('nombre');
@@ -239,6 +346,59 @@
       });
 
       getPacientes();
+    });
+  </script>
+  
+  <script type="module">
+    import { validateSession, requireAuth } from './utils/session.js';
+    import { createSidebar } from './components/sidebar.js';
+    
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loadingScreen = document.getElementById('loadingScreen');
+      const errorScreen = document.getElementById('errorScreen');
+      const mainContent = document.getElementById('mainContent');
+      
+      try {
+        // Validate session
+        const isValid = await validateSession();
+        
+        if (!isValid) {
+          // Show error and redirect
+          loadingScreen.style.display = 'none';
+          errorScreen.style.display = 'flex';
+          setTimeout(() => {
+            window.location.href = '/login.html';
+          }, 3000);
+          return;
+        }
+        
+        // Create and inject sidebar with pacientes as active
+        const sidebarContainer = document.getElementById('sidebarContainer');
+        const sidebarElement = createSidebar({
+            activeItem: 'pacientes',
+            collapsible: true
+        });
+        sidebarContainer.appendChild(sidebarElement);
+        
+        // Hide loading screen
+        loadingScreen.style.display = 'none';
+        mainContent.style.display = 'block';
+        
+        // Handle sidebar toggle
+        window.addEventListener('sidebarToggle', (e) => {
+          if (e.detail.collapsed) {
+            mainContent.classList.add('sidebar-collapsed');
+          } else {
+            mainContent.classList.remove('sidebar-collapsed');
+          }
+        });
+        
+      } catch (error) {
+        console.error('Error initializing page:', error);
+        loadingScreen.style.display = 'none';
+        errorScreen.style.display = 'flex';
+        document.getElementById('errorMessage').textContent = 'Error al cargar la página. Por favor, intente nuevamente.';
+      }
     });
   </script>
 </body>
