@@ -54,6 +54,12 @@ export function createSidebar(options = {}) {
                             <span class="nav-text">Pacientes</span>
                         </a>
                     </li>
+                    <li class="nav-item ${activeItem === 'doctoras' ? 'active' : ''}">
+                        <a href="doctors.html" class="nav-link">
+                            <span class="nav-icon">👩‍⚕️</span>
+                            <span class="nav-text">Doctoras</span>
+                        </a>
+                    </li>
                     <li class="nav-item ${activeItem === 'citas' ? 'active' : ''}">
                         <a href="#" class="nav-link">
                             <span class="nav-icon">📅</span>
