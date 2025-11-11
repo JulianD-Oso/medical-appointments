@@ -61,7 +61,7 @@ export function createSidebar(options = {}) {
                         </a>
                     </li>
                     <li class="nav-item ${activeItem === 'citas' ? 'active' : ''}">
-                        <a href="#" class="nav-link">
+                        <a href="citas.html" class="nav-link">
                             <span class="nav-icon">📅</span>
                             <span class="nav-text">Citas</span>
                         </a>
