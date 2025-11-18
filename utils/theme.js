@@ -290,5 +290,32 @@ export const initTheme = () => {
   themeManager.init();
 };
 
+/**
+ * Asegurar que el tema esté completamente inicializado
+ * Aplica transiciones suaves y verifica el estado del tema
+ */
+export const ensureThemeInitialized = () => {
+  // Aplicar transiciones suaves
+  themeManager.enableSmoothTransition();
+  
+  // Verificar y aplicar el tema actual
+  const currentTheme = themeManager.getCurrentTheme();
+  if (currentTheme.name) {
+    themeManager.applyTheme(currentTheme.name, false);
+  }
+  
+  // Forzar actualización de colores del sidebar si existe
+  setTimeout(() => {
+    const sidebar = document.getElementById('main-sidebar');
+    if (sidebar) {
+      // Actualizar colores de íconos del sidebar
+      const event = new CustomEvent('themechange', {
+        detail: { theme: currentTheme.name, colors: currentTheme.colors }
+      });
+      window.dispatchEvent(event);
+    }
+  }, 100);
+};
+
 // Exportar el gestor de temas para uso avanzado
 export default themeManager;

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba de Tema - Pacientes</title>
+  <link rel="stylesheet" href="styles/sidebar.css">
+  <link rel="stylesheet" href="styles/common-pages.css">
+  
+  <!-- Inicializar sistema de temas -->
+  <script type="module">
+      import { initTheme, ensureThemeInitialized } from './utils/theme.js';
+      initTheme();
+      // Asegurar que el tema esté completamente inicializado
+      document.addEventListener('DOMContentLoaded', () => {
+          ensureThemeInitialized();
+      });
+  </script>
+  <style>
+    /* Estilos específicos para la página de Pacientes */
+    /* Usar variables CSS del tema para compatibilidad con modo oscuro */
+    
+    body {
+      background: var(--color-background, #e0fdfa);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      color: var(--color-text-primary, #333333);
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--color-surface, #ffffff);
+      border-radius: 16px;
+      box-shadow: 0 4px 18px 4px var(--color-shadow, #9ff4e6);
+      padding: 32px;
+      border: 1px solid var(--color-border, #e5e7eb);
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  border-color var(--theme-transition-duration, 200ms) ease,
+                  box-shadow var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    h1 {
+      color: var(--color-primary, #00bfae);
+      text-align: center;
+      transition: color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .btn {
+      background-color: var(--color-primary, #00bfae);
+      color: var(--color-text-inverse, white);
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .btn:hover {
+      background-color: var(--color-primary-hover, #00a093);
+    }
+    
+    .test-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: var(--color-background-secondary, #f9f9f9);
+      border-radius: 8px;
+      border: 1px solid var(--color-border, #ddd);
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  border-color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .test-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--color-surface, #ffffff);
+      margin-top: 20px;
+      color: var(--color-text-primary, #333333);
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .test-table th, .test-table td {
+      padding: 12px;
+      border: 1px solid var(--color-border, #00bfae);
+      text-align: center;
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  color var(--theme-transition-duration, 200ms) ease,
+                  border-color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .test-table th {
+      background: var(--color-primary, #00bfae);
+      color: var(--color-text-inverse, #ffffff);
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .test-table tr:nth-child(even) {
+      background: var(--color-background-secondary, #e0fdfa);
+      transition: background-color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .test-table tr:hover {
+      background: var(--color-surface-hover, #baf1ec);
+      transition: background-color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .status {
+      margin: 20px 0;
+      padding: 15px;
+      background: var(--color-background-secondary, #f0f0f0);
+      border-radius: 8px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Prueba de Sistema de Temas - Pacientes</h1>
+    
+    <div class="test-section">
+      <h2>Controles de Tema</h2>
+      <button class="btn" onclick="toggleTheme()">Cambiar Tema</button>
+      <button class="btn" onclick="showCurrentTheme()">Mostrar Tema Actual</button>
+      <button class="btn" onclick="testNotification()">Probar Notificación</button>
+    </div>
+    
+    <div class="status" id="status">
+      Estado: Inicializando...
+    </div>
+    
+    <div class="test-section">
+      <h2>Tabla de Prueba</h2>
+      <table class="test-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Juan Pérez</td>
+            <td>Activo</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>María García</td>
+            <td>Inactivo</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Carlos López</td>
+            <td>Activo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="test-section">
+      <h2>Formulario de Prueba</h2>
+      <form>
+        <div class="form-group">
+          <label for="testNombre">Nombre:</label>
+          <input type="text" id="testNombre" placeholder="Ingrese un nombre">
+        </div>
+        <div class="form-group">
+          <label for="testEmail">Email:</label>
+          <input type="email" id="testEmail" placeholder="Ingrese un email">
+        </div>
+        <button type="button" class="btn">Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { toggleTheme, getCurrentTheme, isDark, isLight } from './utils/theme.js';
+    
+    // Hacer funciones disponibles globalmente
+    window.toggleTheme = toggleTheme;
+    
+    window.showCurrentTheme = () => {
+      const currentTheme = getCurrentTheme();
+      const status = document.getElementById('status');
+      status.innerHTML = `
+        <strong>Tema Actual:</strong> ${currentTheme.name}<br>
+        <strong>Modo Oscuro:</strong> ${isDark() ? 'Sí' : 'No'}<br>
+        <strong>Colores disponibles:</strong><br>
+        - Primary: ${currentTheme.colors.primary || 'No definido'}<br>
+        - Background: ${currentTheme.colors.background || 'No definido'}<br>
+        - Text: ${currentTheme.colors.textPrimary || 'No definido'}
+      `;
+    };
+    
+    window.testNotification = () => {
+      const notification = document.createElement('div');
+      notification.className = 'notification success';
+      notification.textContent = '¡Notificación de prueba!';
+      notification.style.position = 'fixed';
+      notification.style.top = '20px';
+      notification.style.right = '20px';
+      notification.style.padding = '15px 20px';
+      notification.style.borderRadius = '5px';
+      notification.style.color = 'white';
+      notification.style.fontWeight = '500';
+      notification.style.zIndex = '1000';
+      notification.style.animation = 'slideIn 0.3s ease';
+      notification.style.background = 'var(--success-color, #4CAF50)';
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    };
+    
+    // Escuchar cambios de tema
+    window.addEventListener('themechange', (e) => {
+      console.log('Tema cambiado a:', e.detail.theme);
+      const status = document.getElementById('status');
+      status.innerHTML = `Estado: Tema cambiado a <strong>${e.detail.theme}</strong>`;
+      
+      // Actualizar después de un breve delay
+      setTimeout(() => {
+        showCurrentTheme();
+      }, 100);
+    });
+    
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        showCurrentTheme();
+      }, 500);
+    });
+  </script>
+</body>
+</html>
