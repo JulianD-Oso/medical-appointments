@@ -206,37 +206,72 @@
   
   <div class="main-content" id="mainContent" style="display: none;">
     <div class="container">
-    <h1>Lista de Pacientes - Maxi Dent</h1>
-
-    <div class="form-container">
-      <h2>Crear Nuevo Paciente</h2>
-      <form id="formCrearPaciente">
-        <div class="form-group">
-          <label for="nombre">Nombre:</label>
-          <input type="text" id="nombre" name="nombre" required>
+      <!-- Encabezado mejorado -->
+      <div class="page-header">
+        <h1>Gestión de Pacientes</h1>
+        <p>Administra los pacientes de la clínica</p>
+      </div>
+      
+      <!-- Estadísticas -->
+      <div class="statistics-container">
+        <div class="stat-card">
+          <h3>Total Pacientes</h3>
+          <p class="stat-number" id="total-patients">0</p>
         </div>
-        <div class="form-group">
-          <label for="telefono">Teléfono:</label>
-          <input type="number" id="telefono" name="telefono" required>
+        <div class="stat-card">
+          <h3>Pacientes Activos</h3>
+          <p class="stat-number" id="active-patients">0</p>
         </div>
-        <button type="submit" class="btn">Guardar Paciente</button>
-      </form>
+        <div class="stat-card">
+          <h3>Nuevos Este Mes</h3>
+          <p class="stat-number" id="new-patients">0</p>
+        </div>
+      </div>
+      
+      <!-- Formulario mejorado -->
+      <div class="form-container">
+        <h2>Crear Nuevo Paciente</h2>
+        <form id="formCrearPaciente">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nombre">Nombre Completo:</label>
+              <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+              <label for="telefono">Teléfono:</label>
+              <input type="text" id="telefono" name="telefono" required>
+            </div>
+            <div class="form-group">
+              <label for="correo">Correo Electrónico:</label>
+              <input type="email" id="correo" name="correo" required>
+            </div>
+            <div class="form-group">
+              <label for="direccion">Dirección:</label>
+              <input type="text" id="direccion" name="direccion" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar Paciente</button>
+        </form>
+      </div>
+      
+      <!-- Tabla mejorada -->
+      <div class="table-container">
+        <table id="tablaPacientes" class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Dirección</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
     </div>
-
-    <table id="tablaPacientes">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Teléfono</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Aquí se mostrará la tabla -->
-      </tbody>
-    </table>
-  </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -245,6 +280,8 @@
       const formCrearPaciente = document.getElementById('formCrearPaciente');
       const nombreInput = document.getElementById('nombre');
       const telefonoInput = document.getElementById('telefono');
+      const correoInput = document.getElementById('correo');
+      const direccionInput = document.getElementById('direccion');
       const submitButton = formCrearPaciente.querySelector('button[type="submit"]');
 
       const getPacientes = async () => {
@@ -255,9 +292,10 @@
           }
           const pacientes = await response.json();
           renderPacientes(pacientes);
+          updateStatistics(pacientes);
         } catch (error) {
           console.error('Error:', error);
-          alert('No se pudo cargar la lista de pacientes.');
+          showNotification('No se pudo cargar la lista de pacientes.', 'error');
         }
       };
 
@@ -265,7 +303,7 @@
         tablaPacientes.innerHTML = '';
         if (pacientes.length === 0) {
           const fila = document.createElement('tr');
-          fila.innerHTML = `<td colspan="4">No hay pacientes registrados.</td>`;
+          fila.innerHTML = `<td colspan="6" style="text-align: center; color: #666;">No hay pacientes registrados.</td>`;
           tablaPacientes.appendChild(fila);
         } else {
           pacientes.forEach(paciente => {
@@ -274,6 +312,8 @@
               <td>${paciente.id_paciente}</td>
               <td>${paciente.nombre}</td>
               <td>${paciente.telefono}</td>
+              <td>${paciente.correo || 'N/A'}</td>
+              <td>${paciente.direccion || 'N/A'}</td>
               <td>
                 <button class="btn btn-danger btn-eliminar" data-id="${paciente.id_paciente}">Eliminar</button>
               </td>
@@ -283,13 +323,45 @@
         }
       };
 
+      const updateStatistics = (pacientes) => {
+        document.getElementById('total-patients').textContent = pacientes.length;
+        document.getElementById('active-patients').textContent = pacientes.length;
+        
+        // Calcular pacientes nuevos este mes
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+        const newPatientsThisMonth = pacientes.filter(paciente => {
+          if (paciente.fecha_creacion) {
+            const creationDate = new Date(paciente.fecha_creacion);
+            return creationDate.getMonth() === currentMonth && creationDate.getFullYear() === currentYear;
+          }
+          return false;
+        }).length;
+        
+        document.getElementById('new-patients').textContent = newPatientsThisMonth;
+      };
+
+      const showNotification = (message, type = 'success') => {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      };
+
       formCrearPaciente.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nombre = nombreInput.value.trim();
         const telefono = telefonoInput.value.trim();
+        const correo = correoInput.value.trim();
+        const direccion = direccionInput.value.trim();
 
         if (!nombre || !telefono) {
-          alert('Por favor, complete todos los campos.');
+          showNotification('Por favor, complete al menos el nombre y teléfono.', 'error');
           return;
         }
 
@@ -302,7 +374,7 @@
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nombre, telefono }),
+            body: JSON.stringify({ nombre, telefono, correo, direccion }),
           });
 
           if (!response.ok) {
@@ -311,11 +383,11 @@
 
           formCrearPaciente.reset();
           await getPacientes();
-          alert('Paciente creado con éxito.');
+          showNotification('Paciente creado con éxito.', 'success');
 
         } catch (error) {
           console.error('Error:', error);
-          alert('No se pudo crear el paciente.');
+          showNotification('No se pudo crear el paciente.', 'error');
         } finally {
           submitButton.textContent = 'Guardar Paciente';
           submitButton.disabled = false;
@@ -326,7 +398,7 @@
         if (e.target.classList.contains('btn-eliminar')) {
           const id_paciente = e.target.getAttribute('data-id');
           
-          if (confirm('¿Estás seguro de que deseas eliminar este paciente?')) {
+          if (confirm('¿Está seguro de que desea eliminar este paciente?')) {
             try {
               const response = await fetch(apiBaseUrl, {
                 method: 'DELETE',
@@ -341,11 +413,11 @@
               }
 
               await getPacientes();
-              alert('Paciente eliminado con éxito.');
+              showNotification('Paciente eliminado con éxito.', 'success');
 
             } catch (error) {
               console.error('Error:', error);
-              alert('No se pudo eliminar el paciente.');
+              showNotification('No se pudo eliminar el paciente.', 'error');
             }
           }
         }

@@ -255,9 +255,10 @@
           }
           const doctoras = await response.json();
           renderDoctoras(doctoras);
+          updateStatistics(doctoras);
         } catch (error) {
           console.error('Error:', error);
-          alert('No se pudo cargar la lista de doctoras.');
+          showNotification('No se pudo cargar la lista de doctoras.', 'error');
         }
       };
 
@@ -265,7 +266,7 @@
         tablaDoctoras.innerHTML = '';
         if (doctoras.length === 0) {
           const fila = document.createElement('tr');
-          fila.innerHTML = `<td colspan="5">No hay doctoras registradas.</td>`;
+          fila.innerHTML = `<td colspan="5" style="text-align: center; color: #666;">No hay doctoras registradas.</td>`;
           tablaDoctoras.appendChild(fila);
         } else {
           doctoras.forEach(doctora => {
@@ -284,6 +285,24 @@
         }
       };
 
+      const updateStatistics = (doctoras) => {
+        document.getElementById('total-doctors').textContent = doctoras.length;
+        document.getElementById('active-doctors').textContent = doctoras.length;
+        document.getElementById('specialties-count').textContent = 1; // Por ahora solo tenemos un tipo de especialidad
+      };
+
+      const showNotification = (message, type = 'success') => {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      };
+
       formCrearDoctora.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nombre = nombreInput.value.trim();
@@ -291,7 +310,7 @@
         const cedula = cedulaInput.value.trim();
 
         if (!nombre || !telefono || !cedula) {
-          alert('Por favor, complete todos los campos.');
+          showNotification('Por favor, complete todos los campos.', 'error');
           return;
         }
 
@@ -313,11 +332,11 @@
 
           formCrearDoctora.reset();
           await getDoctoras();
-          alert('Doctora creada con éxito.');
+          showNotification('Doctora creada con éxito.', 'success');
 
         } catch (error) {
           console.error('Error:', error);
-          alert('No se pudo crear la doctora.');
+          showNotification('No se pudo crear la doctora.', 'error');
         } finally {
           submitButton.textContent = 'Guardar Doctora';
           submitButton.disabled = false;
@@ -343,11 +362,11 @@
               }
 
               await getDoctoras();
-              alert('Doctora eliminada con éxito.');
+              showNotification('Doctora eliminada con éxito.', 'success');
 
             } catch (error) {
               console.error('Error:', error);
-              alert('No se pudo eliminar la doctora.');
+              showNotification('No se pudo eliminar la doctora.', 'error');
             }
           }
         }
