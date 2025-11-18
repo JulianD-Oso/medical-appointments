@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sidebar - Maxi Dent</title>
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/home.css">
+    
+    <!-- Inicializar sistema de temas -->
+    <script type="module">
+        import { initTheme } from './utils/theme.js';
+        initTheme();
+    </script>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .test-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .main-area {
+            flex: 1;
+            padding: 20px;
+            margin-left: 280px;
+            background-color: var(--color-background, #f5f7fa);
+            color: var(--color-text-primary, #333333);
+        }
+        
+        .test-controls {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--color-surface, #ffffff);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--color-shadow, rgba(0, 0, 0, 0.1));
+        }
+        
+        .icon-preview {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: var(--color-surface, #ffffff);
+            border-radius: 8px;
+            border: 1px solid var(--color-border, #e1e8ed);
+            min-width: 120px;
+        }
+        
+        .icon-item span {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--color-text-secondary, #666666);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <!-- Sidebar will be injected here -->
+        <div id="sidebar-container"></div>
+        
+        <div class="main-area">
+            <div class="test-controls">
+                <h1>Test de Sidebar con SVG</h1>
+                <p>Este es un test para verificar que los íconos SVG funcionan correctamente con el sistema de temas.</p>
+                
+                <div style="margin-top: 15px;">
+                    <button onclick="toggleTheme()" class="btn btn-primary">Cambiar Tema</button>
+                    <button onclick="collapseSidebar()" class="btn btn-primary">Colapsar Sidebar</button>
+                </div>
+            </div>
+            
+            <div class="icon-preview">
+                <div class="icon-item">
+                    <span class="nav-icon">
+                        <svg class="nav-icon-svg" width="24" height="24" viewBox="0 0 512 512" fill="currentColor">
+                            <path d="M234.2 8.6c12.3-11.4 31.3-11.4 43.5 0L368 92.3V80c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32v101.5l37.8 35.1c9.6 9 12.8 22.9 8 35.1S493.2 272 480 272h-16v176c0 35.3-28.7 64-64 64H112c-35.3 0-64-28.7-64-64V272H32c-13.2 0-25-8.1-29.8-20.3s-1.6-26.2 8-35.1zM224 248v40h-40c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h40v40c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-40h40c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16h-40v-40c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16"/>
+                        </svg>
+                    </span>
+                    <span>Home Icon</span>
+                </div>
+                
+                <div class="icon-item">
+                    <span class="nav-icon">
+                        <svg class="nav-icon-svg" width="24" height="24" viewBox="0 0 48 48" fill="currentColor">
+                            <path fill-rule="evenodd" d="M22.254 12.648a2 2 0 0 0 2.541.05l.003-.002l.005-.004l.05-.038a14.824 14.824 0 0 1 1.14-.758c.793-.476 1.874-1.032 3.08-1.406c2.392-.741 4.929-.705 6.993 1.689c1.246 1.444 1.765 2.84 1.898 4.21c.097.997-.006 2.038-.256 3.142a8 8 0 1 0-4.887 14.467c-.326.926-.62 1.572-.928 2.087c-.364.608-.784 1.097-1.431 1.683c-.327-.31-.74-.804-1.285-1.505l-.267-.345c-.562-.728-1.228-1.59-1.907-2.28c-.717-.726-1.923-1.773-3.5-1.768c-1.568.005-2.777 1.035-3.51 1.767c-.688.69-1.364 1.551-1.934 2.28c-.092.118-.182.233-.27.343c-.556.705-.976 1.202-1.309 1.511c-1.611-1.574-2.5-3.808-3.52-7.965c-.232-.94-.584-2.072-.949-3.24v-.001c-.104-.335-.21-.674-.313-1.011c-.481-1.565-.959-3.212-1.286-4.839c-.687-3.416-.558-6.03.717-7.578c1.695-2.058 3.38-2.994 5.002-3.121c1.629-.128 3.66.522 6.123 2.632Zm12.758 21.097c-1.022 3.234-1.866 4.386-3.725 5.956c-1.198 1.013-2.55-.736-3.973-2.577c-1.233-1.595-2.519-3.258-3.804-3.254c-1.307.004-2.614 1.67-3.864 3.264c-1.441 1.838-2.808 3.581-4.013 2.567c-2.433-2.048-3.5-4.877-4.616-9.418c-.215-.874-.541-1.923-.902-3.08c-1.51-4.849-3.612-11.595-.53-15.337c3.818-4.635 8.562-5.37 13.97-.737c0 0 8.459-6.711 14.026-.256c2.9 3.362 2.779 6.844 1.773 10.265a8.003 8.003 0 0 1-4.342 12.607ZM39 26a6 6 0 1 1-12 0a6 6 0 0 1 12 0Zm-6-4a1 1 0 0 0-1 1v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2a1 1 0 0 0-1-1Z" clip-rule="evenodd"/>
+                            <path d="M33.095 32.92L16.3 38.966l-.4-1.73l17.585-6.33c.008.177-.008.36-.05.544l-.34 1.47Zm-16.082 7.915l15.547-5.597l-.471 2.044l-13.05 4.698a3 3 0 0 1-2.026-1.145ZM31.554 39.6L24.889 42h3.724a3 3 0 0 0 2.924-2.325l.017-.074Z"/>
+                        </svg>
+                    </span>
+                    <span>Pacients Icon</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createSidebar } from './components/sidebar.js';
+        import { toggleTheme } from './utils/theme.js';
+        
+        // Create and inject sidebar
+        const sidebarContainer = document.getElementById('sidebar-container');
+        const sidebar = createSidebar({
+            user: { username: 'Usuario Test', role: 'admin' },
+            activeItem: 'home'
+        });
+        sidebarContainer.appendChild(sidebar);
+        
+        // Make toggleTheme available globally
+        window.toggleTheme = toggleTheme;
+        
+        // Function to collapse sidebar
+        window.collapseSidebar = function() {
+            sidebar.classList.toggle('collapsed');
+        };
+        
+        console.log('Test sidebar loaded successfully!');
+        console.log('SVG icons should be visible and theme-switchable');
+    </script>
+</body>
+</html>
