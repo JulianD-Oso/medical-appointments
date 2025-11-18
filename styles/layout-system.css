@@ -1,0 +1,674 @@
+/**
+ * Sistema de Layout - Maxi Dent
+ * Sistema de grid, flexbox y layout responsivo
+ * Basado en proporciones áureas y principios de diseño moderno
+ */
+
+/* ==========================================================================
+   1. RESET Y NORMALIZACIÓN DE LAYOUT
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   2. SISTEMA DE CONTAINERS
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+}
+
+/* Container sizes */
+.container-xs { max-width: var(--container-xs); }
+.container-sm { max-width: var(--container-sm); }
+.container-md { max-width: var(--container-md); }
+.container-lg { max-width: var(--container-lg); }
+.container-xl { max-width: var(--container-xl); }
+.container-2xl { max-width: var(--container-2xl); }
+.container-3xl { max-width: var(--container-3xl); }
+.container-4xl { max-width: var(--container-4xl); }
+
+/* Fluid container */
+.container-fluid {
+  width: 100%;
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+}
+
+/* ==========================================================================
+   3. SISTEMA DE GRID CSS
+   ========================================================================== */
+
+.grid {
+  display: grid;
+  gap: var(--grid-gutter-md);
+}
+
+/* Grid columns */
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.grid-cols-8 { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+.grid-cols-10 { grid-template-columns: repeat(10, minmax(0, 1fr)); }
+.grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+
+/* Grid auto columns */
+.grid-cols-auto { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
+.grid-cols-auto-minmax { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+/* Grid rows */
+.grid-rows-1 { grid-template-rows: repeat(1, minmax(0, 1fr)); }
+.grid-rows-2 { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+.grid-rows-3 { grid-template-rows: repeat(3, minmax(0, 1fr)); }
+.grid-rows-4 { grid-template-rows: repeat(4, minmax(0, 1fr)); }
+
+/* Grid gaps */
+.gap-0 { gap: 0; }
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-5 { gap: var(--space-5); }
+.gap-6 { gap: var(--space-6); }
+
+/* Column gaps */
+.gap-x-0 { column-gap: 0; }
+.gap-x-1 { column-gap: var(--space-1); }
+.gap-x-2 { column-gap: var(--space-2); }
+.gap-x-3 { column-gap: var(--space-3); }
+.gap-x-4 { column-gap: var(--space-4); }
+.gap-x-5 { column-gap: var(--space-5); }
+.gap-x-6 { column-gap: var(--space-6); }
+
+/* Row gaps */
+.gap-y-0 { row-gap: 0; }
+.gap-y-1 { row-gap: var(--space-1); }
+.gap-y-2 { row-gap: var(--space-2); }
+.gap-y-3 { row-gap: var(--space-3); }
+.gap-y-4 { row-gap: var(--space-4); }
+.gap-y-5 { row-gap: var(--space-5); }
+.gap-y-6 { row-gap: var(--space-6); }
+
+/* Grid alignment */
+.justify-items-start { justify-items: start; }
+.justify-items-end { justify-items: end; }
+.justify-items-center { justify-items: center; }
+.justify-items-stretch { justify-items: stretch; }
+
+.align-items-start { align-items: start; }
+.align-items-end { align-items: end; }
+.align-items-center { align-items: center; }
+.align-items-stretch { align-items: stretch; }
+
+/* Grid item placement */
+.col-span-1 { grid-column: span 1 / span 1; }
+.col-span-2 { grid-column: span 2 / span 2; }
+.col-span-3 { grid-column: span 3 / span 3; }
+.col-span-4 { grid-column: span 4 / span 4; }
+.col-span-5 { grid-column: span 5 / span 5; }
+.col-span-6 { grid-column: span 6 / span 6; }
+.col-span-full { grid-column: 1 / -1; }
+
+/* ==========================================================================
+   4. SISTEMA DE FLEXBOX
+   ========================================================================== */
+
+.flex {
+  display: flex;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+/* Flex direction */
+.flex-row { flex-direction: row; }
+.flex-row-reverse { flex-direction: row-reverse; }
+.flex-col { flex-direction: column; }
+.flex-col-reverse { flex-direction: column-reverse; }
+
+/* Flex wrap */
+.flex-wrap { flex-wrap: wrap; }
+.flex-wrap-reverse { flex-wrap: wrap-reverse; }
+.flex-nowrap { flex-wrap: nowrap; }
+
+/* Flex grow and shrink */
+.flex-1 { flex: 1 1 0%; }
+.flex-auto { flex: 1 1 auto; }
+.flex-initial { flex: 0 1 auto; }
+.flex-none { flex: none; }
+
+.flex-grow { flex-grow: 1; }
+.flex-grow-0 { flex-grow: 0; }
+
+.flex-shrink { flex-shrink: 1; }
+.flex-shrink-0 { flex-shrink: 0; }
+
+/* Justify content */
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+.justify-evenly { justify-content: space-evenly; }
+
+/* Align items */
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.items-center { align-items: center; }
+.items-baseline { align-items: baseline; }
+.items-stretch { align-items: stretch; }
+
+/* Align content */
+.content-start { align-content: flex-start; }
+.content-end { align-content: flex-end; }
+.content-center { align-content: center; }
+.content-between { align-content: space-between; }
+.content-around { align-content: space-around; }
+.content-evenly { align-content: space-evenly; }
+
+/* Align self */
+.self-auto { align-self: auto; }
+.self-start { align-self: flex-start; }
+.self-end { align-self: flex-end; }
+.self-center { align-self: center; }
+.self-baseline { align-self: baseline; }
+.self-stretch { align-self: stretch; }
+
+/* Gap utilities for flex */
+.flex-gap-1 { gap: var(--space-1); }
+.flex-gap-2 { gap: var(--space-2); }
+.flex-gap-3 { gap: var(--space-3); }
+.flex-gap-4 { gap: var(--space-4); }
+.flex-gap-5 { gap: var(--space-5); }
+
+/* ==========================================================================
+   5. SISTEMA DE ALINEACIÓN
+   ========================================================================== */
+
+/* Text alignment */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-justify { text-align: justify; }
+
+/* Vertical alignment */
+.align-baseline { vertical-align: baseline; }
+.align-top { vertical-align: top; }
+.align-middle { vertical-align: middle; }
+.align-bottom { vertical-align: bottom; }
+.align-text-top { vertical-align: text-top; }
+.align-text-bottom { vertical-align: text-bottom; }
+
+/* ==========================================================================
+   6. SISTEMA DE POSICIONAMIENTO
+   ========================================================================== */
+
+/* Position utilities */
+.static { position: static; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+/* Position values */
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.inset-auto { top: auto; right: auto; bottom: auto; left: auto; }
+
+/* Individual position utilities */
+.top-0 { top: 0; }
+.top-1 { top: var(--space-1); }
+.top-2 { top: var(--space-2); }
+.top-3 { top: var(--space-3); }
+.top-4 { top: var(--space-4); }
+
+.right-0 { right: 0; }
+.right-1 { right: var(--space-1); }
+.right-2 { right: var(--space-2); }
+.right-3 { right: var(--space-3); }
+.right-4 { right: var(--space-4); }
+
+.bottom-0 { bottom: 0; }
+.bottom-1 { bottom: var(--space-1); }
+.bottom-2 { bottom: var(--space-2); }
+.bottom-3 { bottom: var(--space-3); }
+.bottom-4 { bottom: var(--space-4); }
+
+.left-0 { left: 0; }
+.left-1 { left: var(--space-1); }
+.left-2 { left: var(--space-2); }
+.left-3 { left: var(--space-3); }
+.left-4 { left: var(--space-4); }
+
+/* Z-index utilities */
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+.z-auto { z-index: auto; }
+
+/* ==========================================================================
+   7. SISTEMA DE TAMAÑOS
+   ========================================================================== */
+
+/* Width utilities */
+.w-0 { width: 0; }
+.w-1 { width: var(--size-1); }
+.w-2 { width: var(--size-2); }
+.w-3 { width: var(--size-3); }
+.w-4 { width: var(--size-4); }
+.w-5 { width: var(--size-5); }
+.w-6 { width: var(--size-6); }
+
+.w-1\/2 { width: 50%; }
+.w-1\/3 { width: 33.333333%; }
+.w-2\/3 { width: 66.666667%; }
+.w-1\/4 { width: 25%; }
+.w-3\/4 { width: 75%; }
+.w-full { width: 100%; }
+.w-auto { width: auto; }
+
+/* Height utilities */
+.h-0 { height: 0; }
+.h-1 { height: var(--size-1); }
+.h-2 { height: var(--size-2); }
+.h-3 { height: var(--size-3); }
+.h-4 { height: var(--size-4); }
+.h-5 { height: var(--size-5); }
+.h-6 { height: var(--size-6); }
+
+.h-1\/2 { height: 50%; }
+.h-1\/3 { height: 33.333333%; }
+.h-2\/3 { height: 66.666667%; }
+.h-1\/4 { height: 25%; }
+.h-3\/4 { height: 75%; }
+.h-full { height: 100%; }
+.h-auto { height: auto; }
+
+/* Viewport utilities */
+.vw-25 { width: 25vw; }
+.vw-50 { width: 50vw; }
+.vw-75 { width: 75vw; }
+.vw-100 { width: 100vw; }
+
+.vh-25 { height: 25vh; }
+vh-50 { height: 50vh; }
+.vh-75 { height: 75vh; }
+.vh-100 { height: 100vh; }
+
+/* ==========================================================================
+   8. SISTEMA DE OVERFLOW
+   ========================================================================== */
+
+/* Overflow utilities */
+.overflow-auto { overflow: auto; }
+.overflow-hidden { overflow: hidden; }
+.overflow-visible { overflow: visible; }
+.overflow-scroll { overflow: scroll; }
+
+/* Overflow axis utilities */
+.overflow-x-auto { overflow-x: auto; }
+.overflow-x-hidden { overflow-x: hidden; }
+.overflow-x-visible { overflow-x: visible; }
+.overflow-x-scroll { overflow-x: scroll; }
+
+.overflow-y-auto { overflow-y: auto; }
+.overflow-y-hidden { overflow-y: hidden; }
+.overflow-y-visible { overflow-y: visible; }
+.overflow-y-scroll { overflow-y: scroll; }
+
+/* ==========================================================================
+   9. SISTEMA DE VISIBILIDAD
+   ========================================================================== */
+
+/* Display utilities */
+.block { display: block; }
+.inline-block { display: inline-block; }
+.inline { display: inline; }
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.grid { display: grid; }
+.inline-grid { display: inline-grid; }
+.hidden { display: none; }
+
+/* Visibility utilities */
+.visible { visibility: visible; }
+.invisible { visibility: hidden; }
+
+/* Opacity utilities */
+.opacity-0 { opacity: 0; }
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+/* ==========================================================================
+   10. SISTEMA DE LAYOUT RESPONSIVO
+   ========================================================================== */
+
+/* Mobile First Responsive Grid */
+
+/* Base (Mobile) */
+.grid-cols-mobile-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-mobile-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-mobile-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.flex-mobile-col { flex-direction: column; }
+.flex-mobile-row { flex-direction: row; }
+
+/* Tablet */
+@media (min-width: 768px) {
+  .grid-cols-tablet-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .grid-cols-tablet-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-cols-tablet-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid-cols-tablet-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .grid-cols-tablet-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  
+  .flex-tablet-col { flex-direction: column; }
+  .flex-tablet-row { flex-direction: row; }
+  
+  .container {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .grid-cols-desktop-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .grid-cols-desktop-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-cols-desktop-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid-cols-desktop-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .grid-cols-desktop-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .grid-cols-desktop-8 { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .grid-cols-desktop-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  
+  .flex-desktop-col { flex-direction: column; }
+  .flex-desktop-row { flex-direction: row; }
+  
+  .container {
+    padding-left: var(--space-5);
+    padding-right: var(--space-5);
+  }
+}
+
+/* Wide screens */
+@media (min-width: 1440px) {
+  .container {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+}
+
+/* ==========================================================================
+   11. SISTEMA DE BREAKPOINTS PERSONALIZADOS
+   ========================================================================== */
+
+/* Extra small devices */
+@media (max-width: 479px) {
+  .hidden-xs { display: none; }
+  .block-xs { display: block; }
+  .flex-xs { display: flex; }
+  .grid-xs { display: grid; }
+}
+
+/* Small devices */
+@media (min-width: 480px) and (max-width: 767px) {
+  .hidden-sm { display: none; }
+  .block-sm { display: block; }
+  .flex-sm { display: flex; }
+  .grid-sm { display: grid; }
+}
+
+/* Medium devices */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hidden-md { display: none; }
+  .block-md { display: block; }
+  .flex-md { display: flex; }
+  .grid-md { display: grid; }
+}
+
+/* Large devices */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .hidden-lg { display: none; }
+  .block-lg { display: block; }
+  .flex-lg { display: flex; }
+  .grid-lg { display: grid; }
+}
+
+/* Extra large devices */
+@media (min-width: 1280px) {
+  .hidden-xl { display: none; }
+  .block-xl { display: block; }
+  .flex-xl { display: flex; }
+  .grid-xl { display: grid; }
+}
+
+/* ==========================================================================
+   12. UTILIDADES DE LAYOUT ESPECÍFICAS
+   ========================================================================== */
+
+/* Layout utilities for common patterns */
+.layout-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.layout-stack-lg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.layout-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.layout-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.layout-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.layout-sidebar > :first-child {
+  flex-basis: 250px;
+  flex-grow: 1;
+}
+
+.layout-sidebar > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: 50%;
+}
+
+.layout-cover {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+  padding: var(--space-4);
+}
+
+.layout-cover > :first-child {
+  margin-block-start: auto;
+}
+
+.layout-cover > :last-child {
+  margin-block-end: auto;
+}
+
+.layout-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.layout-switcher > * {
+  flex-grow: 1;
+  flex-basis: calc((var(--breakpoint-tablet) - 100%) * 999);
+}
+
+/* ==========================================================================
+   13. SISTEMA DE SCROLL Y OVERFLOW
+   ========================================================================== */
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll utilities */
+.scroll-smooth { scroll-behavior: smooth; }
+.scroll-auto { scroll-behavior: auto; }
+
+/* Custom scrollbar for webkit browsers */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: var(--color-background-secondary);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
+
+/* ==========================================================================
+   14. SISTEMA DE RESPONSIVE UTILITIES
+   ========================================================================== */
+
+/* Responsive spacing */
+@media (max-width: 767px) {
+  .m-mobile-0 { margin: 0; }
+  .m-mobile-1 { margin: var(--space-1); }
+  .m-mobile-2 { margin: var(--space-2); }
+  
+  .p-mobile-0 { padding: 0; }
+  .p-mobile-1 { padding: var(--space-1); }
+  .p-mobile-2 { padding: var(--space-2); }
+  
+  .gap-mobile-1 { gap: var(--space-1); }
+  .gap-mobile-2 { gap: var(--space-2); }
+}
+
+@media (min-width: 768px) {
+  .m-tablet-0 { margin: 0; }
+  .m-tablet-1 { margin: var(--space-2); }
+  .m-tablet-2 { margin: var(--space-3); }
+  
+  .p-tablet-0 { padding: 0; }
+  .p-tablet-1 { padding: var(--space-2); }
+  .p-tablet-2 { padding: var(--space-3); }
+  
+  .gap-tablet-1 { gap: var(--space-2); }
+  .gap-tablet-2 { gap: var(--space-3); }
+}
+
+@media (min-width: 1024px) {
+  .m-desktop-0 { margin: 0; }
+  .m-desktop-1 { margin: var(--space-3); }
+  .m-desktop-2 { margin: var(--space-4); }
+  
+  .p-desktop-0 { padding: 0; }
+  .p-desktop-1 { padding: var(--space-3); }
+  .p-desktop-2 { padding: var(--space-4); }
+  
+  .gap-desktop-1 { gap: var(--space-3); }
+  .gap-desktop-2 { gap: var(--space-4); }
+}
+
+/* ==========================================================================
+   15. UTILIDADES DE ACCESIBILIDAD
+   ========================================================================== */
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus visible utilities */
+.focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.focus-visible-ring {
+  box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-primary);
+}
+
+/* Skip to content link */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--color-primary);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-to-content:focus {
+  top: 6px;
+}
+
+/* ==========================================================================
+   16. PRINT STYLES
+   ========================================================================== */
+
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  
+  .container {
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  .grid {
+    gap: 1rem !important;
+  }
+  
+  .flex {
+    display: block !important;
+  }
+}

@@ -1,0 +1,483 @@
+/**
+ * Sistema de Tipografía - Maxi Dent
+ * Sistema profesional de tipografía basado en proporciones áureas
+ * y principios de diseño moderno
+ */
+
+/* ==========================================================================
+   1. IMPORTS Y CONFIGURACIÓN BASE
+   ========================================================================== */
+
+/* Importar fuentes de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ==========================================================================
+   2. VARIABLES CSS DE TIPOGRAFÍA
+   ========================================================================== */
+
+:root {
+  /* Familias de fuentes */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-secondary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  
+  /* Sistema de tamaños basado en proporción áurea (1.618) */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem;  /* 36px */
+  --font-size-5xl: 3rem;     /* 48px */
+  --font-size-6xl: 3.75rem;  /* 60px */
+  
+  /* Pesos de fuente */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Alturas de línea basadas en proporciones óptimas */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* Espaciado de letras */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  
+  /* Escalado responsive */
+  --font-scale-mobile: 0.875;
+  --font-scale-tablet: 0.9375;
+  --font-scale-desktop: 1;
+}
+
+/* ==========================================================================
+   3. RESET Y NORMALIZACIÓN
+   ========================================================================== */
+
+* {
+  font-family: var(--font-family-primary);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+/* ==========================================================================
+   4. TIPOGRAFÍA BASE
+   ========================================================================== */
+
+/* Estilos base para elementos de texto */
+body {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary, #1f2937);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   5. JERARQUÍA DE ENCABEZADOS
+   ========================================================================== */
+
+/* H1 - Hero/Títulos principales */
+h1, .h1 {
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin: 0 0 1.5rem 0;
+}
+
+/* H2 - Secciones principales */
+h2, .h2 {
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin: 0 0 1.25rem 0;
+}
+
+/* H3 - Subsecciones */
+h3, .h3 {
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  margin: 0 0 1rem 0;
+}
+
+/* H4 - Títulos de componentes */
+h4, .h4 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  margin: 0 0 0.875rem 0;
+}
+
+/* H5 - Etiquetas importantes */
+h5, .h5 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  margin: 0 0 0.75rem 0;
+}
+
+/* H6 - Etiquetas pequeñas */
+h6, .h6 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  margin: 0 0 0.625rem 0;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* ==========================================================================
+   6. TIPOGRAFÍA DE PÁRRAFOS Y TEXTO
+   ========================================================================== */
+
+/* Párrafos */
+p, .p {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-relaxed);
+  margin: 0 0 1rem 0;
+}
+
+/* Variantes de párrafos */
+p.lead, .p-lead {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  font-weight: var(--font-weight-normal);
+  margin-bottom: 1.5rem;
+}
+
+p.small, .p-small {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  margin-bottom: 0.75rem;
+}
+
+p.tiny, .p-tiny {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-normal);
+  margin-bottom: 0.5rem;
+}
+
+/* ==========================================================================
+   7. ENLACES Y ELEMENTOS INTERACTIVOS
+   ========================================================================== */
+
+a, .link {
+  color: var(--color-primary, #2563eb);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+a:hover, .link:hover {
+  color: var(--color-primary-hover, #1d4ed8);
+  text-decoration: underline;
+}
+
+a:focus, .link:focus {
+  outline: 2px solid var(--color-primary, #2563eb);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Enlaces secundarios */
+a.secondary, .link-secondary {
+  color: var(--color-text-secondary, #6b7280);
+}
+
+a.secondary:hover, .link-secondary:hover {
+  color: var(--color-text-primary, #1f2937);
+}
+
+/* ==========================================================================
+   8. ÉNFASIS Y ESTILOS DE TEXTO
+   ========================================================================== */
+
+/* Negrita */
+strong, b, .strong {
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Cursiva */
+em, i, .em {
+  font-style: italic;
+}
+
+/* Código */
+code, .code {
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+  background-color: var(--color-background-secondary, #f3f4f6);
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  color: var(--color-text-primary, #1f2937);
+}
+
+/* Citas */
+blockquote, .blockquote {
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-lg);
+  font-style: italic;
+  line-height: var(--line-height-relaxed);
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid var(--color-primary, #2563eb);
+  background-color: var(--color-background-secondary, #f3f4f6);
+  border-radius: 0 8px 8px 0;
+}
+
+/* ==========================================================================
+   9. LISTAS
+   ========================================================================== */
+
+ul, ol {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  margin: 0 0 1rem 0;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.25rem;
+}
+
+/* Listas sin viñetas */
+ul.unstyled, ol.unstyled {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Listas inline */
+ul.inline, ol.inline {
+  padding-left: 0;
+}
+
+ul.inline li, ol.inline li {
+  display: inline-block;
+  margin-right: 1rem;
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   10. ELEMENTOS DE FORMULARIO
+   ========================================================================== */
+
+/* Inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+textarea,
+select {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+/* Botones */
+button, .btn {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  text-transform: none;
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+/* Labels */
+label, .label {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-secondary, #6b7280);
+}
+
+/* ==========================================================================
+   11. UTILIDADES TIPOGRÁFICAS
+   ========================================================================== */
+
+/* Alineación de texto */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-justify { text-align: justify; }
+
+/* Transformación de texto */
+.text-lowercase { text-transform: lowercase; }
+.text-uppercase { text-transform: uppercase; }
+.text-capitalize { text-transform: capitalize; }
+
+/* Peso de fuente */
+.font-light { font-weight: var(--font-weight-light); }
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+/* Estilo de fuente */
+.font-italic { font-style: italic; }
+.font-normal-style { font-style: normal; }
+
+/* Familias de fuente */
+.font-primary { font-family: var(--font-family-primary); }
+.font-secondary { font-family: var(--font-family-secondary); }
+.font-mono { font-family: var(--font-family-mono); }
+
+/* Tamaños de fuente */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+.text-4xl { font-size: var(--font-size-4xl); }
+.text-5xl { font-size: var(--font-size-5xl); }
+.text-6xl { font-size: var(--font-size-6xl); }
+
+/* Alturas de línea */
+.leading-tight { line-height: var(--line-height-tight); }
+.leading-normal { line-height: var(--line-height-normal); }
+.leading-relaxed { line-height: var(--line-height-relaxed); }
+
+/* Espaciado de letras */
+.tracking-tight { letter-spacing: var(--letter-spacing-tight); }
+.tracking-normal { letter-spacing: var(--letter-spacing-normal); }
+.tracking-wide { letter-spacing: var(--letter-spacing-wide); }
+.tracking-wider { letter-spacing: var(--letter-spacing-wider); }
+
+/* Decoración de texto */
+.underline { text-decoration: underline; }
+.no-underline { text-decoration: none; }
+.line-through { text-decoration: line-through; }
+
+/* Color de texto (hereda del tema) */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-inverse { color: var(--color-text-inverse); }
+
+/* ==========================================================================
+   12. RESPONSIVE TYPOGRAPHY
+   ========================================================================== */
+
+/* Mobile First Approach */
+
+/* Mobile (default) */
+@media (max-width: 767px) {
+  h1, .h1 { font-size: calc(var(--font-size-3xl) * var(--font-scale-mobile)); }
+  h2, .h2 { font-size: calc(var(--font-size-2xl) * var(--font-scale-mobile)); }
+  h3, .h3 { font-size: calc(var(--font-size-xl) * var(--font-scale-mobile)); }
+  h4, .h4 { font-size: calc(var(--font-size-lg) * var(--font-scale-mobile)); }
+  h5, .h5 { font-size: calc(var(--font-size-base) * var(--font-scale-mobile)); }
+  h6, .h6 { font-size: calc(var(--font-size-sm) * var(--font-scale-mobile)); }
+  
+  p, .p { font-size: calc(var(--font-size-base) * var(--font-scale-mobile)); }
+  p.lead, .p-lead { font-size: calc(var(--font-size-base) * var(--font-scale-mobile)); }
+  
+  body {
+    font-size: calc(var(--font-size-base) * var(--font-scale-mobile));
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  h1, .h1 { font-size: calc(var(--font-size-4xl) * var(--font-scale-tablet)); }
+  h2, .h2 { font-size: calc(var(--font-size-3xl) * var(--font-scale-tablet)); }
+  h3, .h3 { font-size: calc(var(--font-size-2xl) * var(--font-scale-tablet)); }
+  h4, .h4 { font-size: calc(var(--font-size-xl) * var(--font-scale-tablet)); }
+  h5, .h5 { font-size: calc(var(--font-size-lg) * var(--font-scale-tablet)); }
+  h6, .h6 { font-size: calc(var(--font-size-base) * var(--font-scale-tablet)); }
+  
+  body {
+    font-size: calc(var(--font-size-base) * var(--font-scale-tablet));
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  /* Usar tamaños base definidos en :root */
+}
+
+/* ==========================================================================
+   13. ACCESIBILIDAD Y WCAG COMPLIANCE
+   ========================================================================== */
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  body {
+    font-weight: var(--font-weight-medium);
+  }
+  
+  strong, b, .strong {
+    font-weight: var(--font-weight-bold);
+  }
+  
+  a, .link {
+    text-decoration: underline;
+  }
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Tamaño de fuente grande */
+@media (min-width: 1440px) {
+  :root {
+    --font-scale-desktop: 1.125;
+  }
+}
+
+/* ==========================================================================
+   14. IMPRESIÓN
+   ========================================================================== */
+
+@media print {
+  * {
+    font-family: Georgia, 'Times New Roman', Times, serif !important;
+    color: #000 !important;
+    background: transparent !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+}

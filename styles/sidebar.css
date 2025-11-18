@@ -1,8 +1,13 @@
 /**
  * Sidebar Component Styles
  * Styles for the reusable sidebar component
- * Compatible con sistema de temas dinámicos
+ * Compatible con sistema de temas dinámicos y tipografía profesional
  */
+
+/* Importar sistema de tipografía y diseño */
+@import url('./typography.css');
+@import url('./design-system.css');
+@import url('./layout-system.css');
 
 /* Sidebar Base Styles */
 .sidebar {
@@ -52,10 +57,12 @@
 }
 
 .logo-text {
-    font-size: 18px;
-    font-weight: 600;
+    font-family: var(--font-family-secondary, 'Poppins', system-ui, sans-serif);
+    font-size: var(--font-size-lg, 1.125rem);
+    font-weight: var(--font-weight-semibold, 600);
+    line-height: var(--line-height-tight, 1.25);
     white-space: nowrap;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-normal, 250ms cubic-bezier(0, 0, 0.2, 1));
 }
 
 .sidebar.collapsed .logo-text {
@@ -96,7 +103,7 @@
 .sidebar-content {
     flex: 1;
     overflow-y: auto;
-    padding: 20px 0;
+    padding: var(--space-4, 2.125rem) 0;
 }
 
 /* User Section */
@@ -104,24 +111,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 20px 20px;
-    margin-bottom: 20px;
+    padding: 0 var(--space-4, 2.125rem) var(--space-4, 2.125rem);
+    margin-bottom: var(--space-4, 2.125rem);
     border-bottom: 1px solid var(--color-sidebar-hover, #34495e);
 }
 
 .user-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: var(--radius-full, 9999px);
     background-color: var(--color-secondary, #00bfae);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
-    font-size: 24px;
-    font-weight: 600;
+    margin-bottom: var(--space-2, 0.8125rem);
+    font-size: var(--font-size-2xl, 1.5rem);
+    font-weight: var(--font-weight-semibold, 600);
     color: var(--color-text-inverse, white);
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal, 250ms cubic-bezier(0, 0, 0.2, 1));
 }
 
 .sidebar.collapsed .user-avatar {
@@ -147,16 +154,21 @@
 
 .user-name {
     display: block;
-    font-weight: 600;
-    margin-bottom: 2px;
-    font-size: 14px;
+    font-family: var(--font-family-primary, 'Inter', system-ui, sans-serif);
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: var(--font-weight-semibold, 600);
+    line-height: var(--line-height-tight, 1.25);
+    margin-bottom: var(--space-micro-1, 0.125rem);
     white-space: nowrap;
     color: var(--color-sidebar-text-active, var(--color-text-primary, #ffffff));
 }
 
 .user-role {
     display: block;
-    font-size: 12px;
+    font-family: var(--font-family-primary, 'Inter', system-ui, sans-serif);
+    font-size: var(--font-size-xs, 0.75rem);
+    font-weight: var(--font-weight-normal, 400);
+    line-height: var(--line-height-tight, 1.25);
     color: var(--color-sidebar-text, #bdc3c7);
     white-space: nowrap;
 }
@@ -179,10 +191,10 @@
 .nav-link {
     display: flex;
     align-items: center;
-    padding: 12px 20px;
+    padding: var(--space-2, 0.8125rem) var(--space-4, 2.125rem);
     color: var(--color-sidebar-text, #ecf0f1);
     text-decoration: none;
-    transition: all var(--theme-transition-duration, 200ms) ease;
+    transition: all var(--transition-fast, 150ms cubic-bezier(0, 0, 0.2, 1));
     border-left: 3px solid transparent;
     position: relative;
 }
@@ -199,11 +211,11 @@
 }
 
 .nav-icon {
-    font-size: 18px;
-    margin-right: 12px;
-    width: 20px;
+    font-size: var(--font-size-lg, 1.125rem);
+    margin-right: var(--space-2, 0.8125rem);
+    width: 1.25rem;
     text-align: center;
-    transition: margin 0.3s ease;
+    transition: margin var(--transition-normal, 250ms cubic-bezier(0, 0, 0.2, 1));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -323,16 +335,18 @@
     background: none;
     border: 1px solid var(--color-error, #e74c3c);
     color: var(--color-error, #e74c3c);
-    padding: 10px;
-    border-radius: 4px;
+    padding: var(--space-2, 0.8125rem);
+    border-radius: var(--radius-md, 0.375rem);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    transition: all var(--theme-transition-duration, 200ms) ease;
-    font-size: 14px;
-    font-weight: 500;
+    gap: var(--space-1, 0.5rem);
+    transition: all var(--transition-fast, 150ms cubic-bezier(0, 0, 0.2, 1));
+    font-family: var(--font-family-primary, 'Inter', system-ui, sans-serif);
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: var(--font-weight-medium, 500);
+    line-height: var(--line-height-tight, 1.25);
 }
 
 .logout-btn:hover {
