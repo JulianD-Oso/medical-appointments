@@ -83,6 +83,12 @@ export function createSidebar(options = {}) {
         </div>
         
         <div class="sidebar-footer">
+            <div class="theme-toggle-container">
+                <button class="theme-toggle-btn" id="theme-toggle-btn" title="Cambiar tema">
+                    <span class="theme-icon theme-light">☀️</span>
+                    <span class="theme-icon theme-dark">🌙</span>
+                </button>
+            </div>
             <button class="logout-btn" id="sidebar-logout">
                 <span class="nav-icon">🚪</span>
                 <span class="nav-text">Cerrar Sesión</span>
@@ -138,6 +144,26 @@ function setupEventListeners(sidebar, collapsible) {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
             handleLogout();
+        });
+    }
+    
+    // Handle theme toggle button
+    const themeToggleBtn = sidebar.querySelector('#theme-toggle-btn');
+    if (themeToggleBtn) {
+        updateThemeToggleButton(themeToggleBtn);
+        themeToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            import('../utils/theme.js').then(module => {
+                module.toggleTheme();
+                updateThemeToggleButton(themeToggleBtn);
+            }).catch(error => {
+                console.error('Error al cambiar tema:', error);
+            });
+        });
+        
+        // Listen for theme changes
+        window.addEventListener('themechange', () => {
+            updateThemeToggleButton(themeToggleBtn);
         });
     }
     
@@ -240,4 +266,24 @@ export function refreshSidebarUser(sidebar, user) {
     if (userAvatarElement) {
         userAvatarElement.textContent = getInitials(user.username || 'Usuario');
     }
+}
+
+/**
+ * Updates theme toggle button appearance
+ * @param {HTMLElement} button - Theme toggle button
+ */
+function updateThemeToggleButton(button) {
+    import('../utils/theme.js').then(module => {
+        const isDark = module.isDark();
+        const lightIcon = button.querySelector('.theme-light');
+        const darkIcon = button.querySelector('.theme-dark');
+        
+        if (lightIcon && darkIcon) {
+            lightIcon.style.display = isDark ? 'none' : 'inline';
+            darkIcon.style.display = isDark ? 'inline' : 'none';
+            button.setAttribute('title', isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+        }
+    }).catch(error => {
+        console.error('Error al actualizar botón de tema:', error);
+    });
 }

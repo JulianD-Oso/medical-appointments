@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Maxi Dent</title>
+  
+  <!-- Inicializar sistema de temas -->
+  <script type="module">
+      import { initTheme } from './utils/theme.js';
+      initTheme();
+  </script>
   <style>
     body, html {
       margin: 0;
@@ -19,7 +25,7 @@
 
     .login-left {
       flex: 1;
-      background-color: white;
+      background-color: var(--color-surface, white);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -32,21 +38,23 @@
 
     .login-right {
       flex: 1;
-      background-color: #f0f2f5;
+      background-color: var(--color-background, #f0f2f5);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 40px;
+      color: var(--color-text-primary, #333333);
     }
 
     #loginForm {
       width: 100%;
       max-width: 400px;
-      background: white;
+      background: var(--color-surface, white);
       padding: 40px;
       border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px var(--color-shadow, rgba(0, 0, 0, 0.1));
+      border: 1px solid var(--color-border, #e5e7eb);
     }
 
     .form-group {
@@ -56,21 +64,34 @@
     .form-group input {
       width: 100%;
       padding: 15px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--color-border, #ccc);
       border-radius: 4px;
       box-sizing: border-box;
+      background: var(--color-surface, white);
+      color: var(--color-text-primary, #333333);
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--color-primary, #00bfae);
+      box-shadow: 0 0 5px rgba(0, 191, 174, 0.3);
     }
 
     .btn {
       width: 100%;
       padding: 15px;
-      background-color: #00bfae;
-      color: white;
+      background-color: var(--color-primary, #00bfae);
+      color: var(--color-text-inverse, white);
       border: none;
       border-radius: 4px;
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
+      transition: background-color var(--theme-transition-duration, 200ms) ease;
+    }
+    
+    .btn:hover {
+      background-color: var(--color-primary-hover, #00a093);
     }
 
     .btn:hover {

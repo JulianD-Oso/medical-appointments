@@ -1,11 +1,14 @@
 /* Estilos comunes para páginas de gestión (pacientes, doctoras, etc.) */
+/* Compatible con sistema de temas dinámicos */
 
 /* Layout principal */
 .main-content {
   flex: 1;
   padding: 20px;
   margin-left: 280px;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s ease, background-color var(--theme-transition-duration, 200ms) ease;
+  background-color: var(--color-background, #ffffff);
+  color: var(--color-text-primary, #333333);
 }
 
 .main-content.sidebar-collapsed {
@@ -16,61 +19,68 @@
 .container {
   max-width: 800px;
   margin: 0 auto;
-  background: #fff;
+  background: var(--color-surface, #ffffff);
   border-radius: 16px;
-  box-shadow: 0 4px 18px 4px #9ff4e6;
+  box-shadow: 0 4px 18px 4px var(--color-shadow, #9ff4e6);
   padding: 32px;
+  border: 1px solid var(--color-border, #e5e7eb);
 }
 
 /* Títulos */
 h1 {
-  color: #00bfae;
+  color: var(--color-primary, #00bfae);
   text-align: center;
   margin-bottom: 30px;
+  transition: color var(--theme-transition-duration, 200ms) ease;
 }
 
 /* Tablas */
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: var(--color-surface, #ffffff);
   margin-top: 20px;
+  color: var(--color-text-primary, #333333);
 }
 
 th, td {
   padding: 12px;
-  border: 1px solid #00bfae;
+  border: 1px solid var(--color-border, #00bfae);
   text-align: center;
+  transition: background-color var(--theme-transition-duration, 200ms) ease, 
+              color var(--theme-transition-duration, 200ms) ease;
 }
 
 th {
-  background: #00bfae;
-  color: #fff;
+  background: var(--color-primary, #00bfae);
+  color: var(--color-text-inverse, #ffffff);
   font-size: 18px;
 }
 
 tr:nth-child(even) {
-  background: #e0fdfa;
+  background: var(--color-background-secondary, #e0fdfa);
 }
 
 tr:hover {
-  background: #baf1ec;
-  transition: 0.3s;
+  background: var(--color-surface-hover, #baf1ec);
+  transition: background-color var(--theme-transition-duration, 200ms) ease;
 }
 
 /* Formularios */
 .form-container {
   margin-bottom: 20px;
   padding: 20px;
-  background: #f9f9f9;
+  background: var(--color-background-secondary, #f9f9f9);
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border, #ddd);
+  color: var(--color-text-primary, #333333);
 }
 
 .form-container h2 {
-  color: #00bfae;
+  color: var(--color-primary, #00bfae);
   text-align: center;
   margin-bottom: 20px;
+  transition: color var(--theme-transition-duration, 200ms) ease;
 }
 
 .form-group {
@@ -81,48 +91,56 @@ tr:hover {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+  color: var(--color-text-primary, #333333);
 }
 
 .form-group input {
   width: 100%;
   padding: 8px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border, #ccc);
   box-sizing: border-box;
+  background: var(--color-surface, #ffffff);
+  color: var(--color-text-primary, #333333);
+  transition: border-color var(--theme-transition-duration, 200ms) ease,
+              box-shadow var(--theme-transition-duration, 200ms) ease,
+              background-color var(--theme-transition-duration, 200ms) ease;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #00bfae;
+  border-color: var(--color-primary, #00bfae);
   box-shadow: 0 0 5px rgba(0, 191, 174, 0.3);
 }
 
 /* Botones */
 .btn {
-  background-color: #00bfae;
-  color: white;
+  background-color: var(--color-primary, #00bfae);
+  color: var(--color-text-inverse, white);
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--theme-transition-duration, 200ms) ease,
+              color var(--theme-transition-duration, 200ms) ease;
 }
 
 .btn:hover {
-  background-color: #00a093;
+  background-color: var(--color-primary-hover, #00a093);
 }
 
 .btn-danger {
-  background-color: #f44336;
+  background-color: var(--color-error, #f44336);
 }
 
 .btn-danger:hover {
-  background-color: #da190b;
+  background-color: var(--color-error-hover, #da190b);
 }
 
 .btn:disabled {
-  background-color: #ccc;
+  background-color: var(--color-disabled, #ccc);
+  color: var(--color-text-tertiary, #666666);
   cursor: not-allowed;
 }
 
@@ -134,6 +152,8 @@ tr:hover {
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.9);
+  background: var(--color-background, #ffffff);
+  opacity: 0.9;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -143,8 +163,8 @@ tr:hover {
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #00bfae;
+  border: 5px solid var(--color-background-secondary, #f3f3f3);
+  border-top: 5px solid var(--color-primary, #00bfae);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -160,11 +180,12 @@ tr:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: var(--color-background, #ffffff);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  color: var(--color-text-primary, #333333);
 }
 
 .error-content {
@@ -173,7 +194,7 @@ tr:hover {
 }
 
 .error-content h2 {
-  color: #f44336;
+  color: var(--color-error, #f44336);
   margin-bottom: 20px;
 }
 
