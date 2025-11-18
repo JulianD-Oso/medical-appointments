@@ -377,41 +377,34 @@
   </script>
   
   <script type="module">
-    import { validateSession, requireAuth } from './utils/session.js';
+    import { isAuthenticated, getCurrentUser, requireAuth } from './utils/session.js';
     import { createSidebar } from './components/sidebar.js';
-    
-    document.addEventListener('DOMContentLoaded', async () => {
+
+    document.addEventListener('DOMContentLoaded', () => {
       const loadingScreen = document.getElementById('loadingScreen');
       const errorScreen = document.getElementById('errorScreen');
       const mainContent = document.getElementById('mainContent');
-      
+
       try {
-        // Validate session
-        const isValid = await validateSession();
-        
-        if (!isValid) {
-          // Show error and redirect
+        if (!requireAuth(window.location.pathname)) {
           loadingScreen.style.display = 'none';
           errorScreen.style.display = 'flex';
-          setTimeout(() => {
-            window.location.href = '/login.html';
-          }, 3000);
           return;
         }
-        
-        // Create and inject sidebar with doctoras as active
+
+        const currentUser = getCurrentUser();
+
         const sidebarContainer = document.getElementById('sidebarContainer');
         const sidebarElement = createSidebar({
-            activeItem: 'doctoras',
-            collapsible: true
+          user: currentUser,
+          activeItem: 'doctoras',
+          collapsible: true
         });
         sidebarContainer.appendChild(sidebarElement);
-        
-        // Hide loading screen
+
         loadingScreen.style.display = 'none';
         mainContent.style.display = 'block';
-        
-        // Handle sidebar toggle
+
         window.addEventListener('sidebarToggle', (e) => {
           if (e.detail.collapsed) {
             mainContent.classList.add('sidebar-collapsed');
@@ -419,7 +412,15 @@
             mainContent.classList.remove('sidebar-collapsed');
           }
         });
-        
+
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden && isAuthenticated()) {
+            import('./utils/session.js').then(module => {
+              module.extendSession();
+            });
+          }
+        });
+
       } catch (error) {
         console.error('Error initializing page:', error);
         loadingScreen.style.display = 'none';
@@ -430,4 +431,3 @@
   </script>
 </body>
 </html>
-

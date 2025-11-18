@@ -234,7 +234,7 @@
   </div>
 
   <script type="module">
-    import { validateSession, requireAuth } from './utils/session.js';
+    import { isAuthenticated, getCurrentUser, requireAuth } from './utils/session.js';
     import { createSidebar } from './components/sidebar.js';
 
     const API_URL = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/appointment';
@@ -269,20 +269,15 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        const isValid = await validateSession();
-        
-        if (!isValid) {
-          // Show error and redirect
+        if (!requireAuth(window.location.pathname)) {
           loadingScreen.style.display = 'none';
           errorScreen.style.display = 'flex';
-          setTimeout(() => {
-            window.location.href = '/login.html';
-          }, 3000);
           return;
         }
 
         // Inyectar sidebar
-        const sidebarElement = createSidebar({ activeItem: 'citas', collapsible: true });
+        const currentUser = getCurrentUser();
+        const sidebarElement = createSidebar({ user: currentUser, activeItem: 'citas', collapsible: true });
         sidebarContainer.appendChild(sidebarElement);
 
         // Ocultar loading y mostrar contenido
@@ -319,6 +314,14 @@
             currentPage++;
             renderTabla();
             renderPaginacion();
+          }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden && isAuthenticated()) {
+            import('./utils/session.js').then(module => {
+              module.extendSession();
+            });
           }
         });
 

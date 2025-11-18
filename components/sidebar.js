@@ -183,12 +183,12 @@ function handleLogout() {
     if (confirm('¿Está seguro de que desea cerrar sesión?')) {
         import('../utils/session.js').then(module => {
             module.clearSession();
-            window.location.href = '/login';
+            window.location.href = '/login.html';
         }).catch(error => {
             console.error('Error during logout:', error);
             // Fallback: clear localStorage manually
             localStorage.clear();
-            window.location.href = '/login';
+            window.location.href = '/login.html';
         });
     }
 }
