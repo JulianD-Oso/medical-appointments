@@ -345,7 +345,7 @@
 
     async function handleBuscar() {
       errorBanner.style.display = 'none';
-      const { startTs, endTs, error } = getValidatedRange();
+      const { startTs, endTs, startStr, endStr, error } = getValidatedRange();
       if (error) {
         showError(error);
         return;
@@ -353,7 +353,7 @@
 
       try {
         setStatus('Cargando citas...');
-        const url = `${API_URL}?start_date=${encodeURIComponent(startTs)}&end_date=${encodeURIComponent(endTs)}`;
+        const url = `${API_URL}?start_date=${encodeURIComponent(startStr)}&end_date=${encodeURIComponent(endStr)}`;
         const resp = await fetch(url, { method: 'GET' });
         if (!resp.ok) {
           throw new Error(`Error al consultar citas: ${resp.status}`);
@@ -455,15 +455,19 @@
       if (!startVal || !endVal) {
         return { error: 'Debe seleccionar las fechas de inicio y fin.' };
       }
-      const startTs = new Date(startVal).getTime();
-      const endTs = new Date(endVal).getTime();
+      const startDate = new Date(startVal);
+      const endDate = new Date(endVal);
+      const startTs = startDate.getTime();
+      const endTs = endDate.getTime();
       if (isNaN(startTs) || isNaN(endTs)) {
         return { error: 'Formato de fecha inválido.' };
       }
       if (startTs > endTs) {
         return { error: 'La fecha inicio no puede ser mayor que la fecha fin.' };
       }
-      return { startTs, endTs };
+      const startStr = formatApiDate(startDate);
+      const endStr = formatApiDate(endDate);
+      return { startTs, endTs, startStr, endStr };
     }
 
     function showError(msg) {
@@ -484,6 +488,17 @@
       const hh = pad(date.getHours());
       const min = pad(date.getMinutes());
       return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+    }
+
+    function formatApiDate(date) {
+      const pad = (n) => String(n).padStart(2, '0');
+      const yyyy = date.getFullYear();
+      const mm = pad(date.getMonth() + 1);
+      const dd = pad(date.getDate());
+      const hh = pad(date.getHours());
+      const min = pad(date.getMinutes());
+      const ss = pad(date.getSeconds());
+      return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
     }
 
     function toInputDateTimeLocal(date) {
