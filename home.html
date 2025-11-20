@@ -39,10 +39,7 @@
                 <header class="header">
                     <div class="header-content">
                         <h1>Bienvenido a Maxi Dent</h1>
-                        <div class="user-info">
-                            <span id="user-name"></span>
-                            <button id="logout-btn" class="logout-btn">Cerrar Sesión</button>
-                        </div>
+                        <button id="logout-btn" class="logout-btn">Cerrar Sesión</button>
                     </div>
                 </header>
 
@@ -67,14 +64,14 @@
                                 <div class="card-icon">📊</div>
                                 <h3>Reportes</h3>
                                 <p>Consulta reportes y estadísticas</p>
-                                <a href="#" class="card-link">Ver Reportes</a>
+                                <a href="coming-soon.html" class="card-link">Ver Reportes</a>
                             </div>
                             
                             <div class="card">
                                 <div class="card-icon">⚙️</div>
                                 <h3>Configuración</h3>
                                 <p>Configura tu cuenta y preferencias</p>
-                                <a href="#" class="card-link">Configurar</a>
+                                <a href="coming-soon.html" class="card-link">Configurar</a>
                             </div>
                         </div>
                     </div>
@@ -101,7 +98,6 @@
                 this.loadingScreen = document.getElementById('loading-screen');
                 this.mainContent = document.getElementById('main-content');
                 this.errorScreen = document.getElementById('error-screen');
-                this.userNameElement = document.getElementById('user-name');
                 this.logoutBtn = document.getElementById('logout-btn');
                 this.retryLoginBtn = document.getElementById('retry-login');
             }
@@ -155,9 +151,6 @@
                     // Get current user
                     const currentUser = getCurrentUser();
                     
-                    // Update user name in header
-                    this.userNameElement.textContent = currentUser.username || 'Usuario';
-
                     // Create and inject sidebar
                     const sidebarContainer = document.getElementById('sidebar-container');
                     const sidebar = createSidebar({

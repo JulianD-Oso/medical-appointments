@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Próximamente - Maxi Dent</title>
+
+    <!-- Tipografías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Sistema de estilos -->
+    <link rel="stylesheet" href="styles/typography.css" />
+    <link rel="stylesheet" href="styles/design-system.css" />
+    <link rel="stylesheet" href="styles/layout-system.css" />
+    <link rel="stylesheet" href="styles/coming-soon.css" />
+
+    <!-- Inicializar sistema de tema -->
+    <script type="module">
+        import { initTheme } from './utils/theme.js';
+        initTheme();
+    </script>
+</head>
+<body>
+    <main class="coming-soon-page">
+        <section class="coming-card" aria-labelledby="title">
+            <img src="logo-maxident.PNG" alt="Maxi Dent" class="coming-logo" />
+            <h1 id="title" class="coming-title">Próximamente...</h1>
+            <p class="coming-text">Estamos trabajando en esta sección. Vuelve pronto.</p>
+            <a href="home.html" class="back-link" aria-label="Volver al inicio">Volver al inicio</a>
+        </section>
+    </main>
+</body>
+</html>

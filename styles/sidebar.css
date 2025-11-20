@@ -330,7 +330,7 @@
 }
 
 /* Logout Button */
-.logout-btn {
+.sidebar .logout-btn {
     width: 100%;
     background: none;
     border: 1px solid var(--color-error, #e74c3c);
@@ -349,7 +349,7 @@
     line-height: var(--line-height-tight, 1.25);
 }
 
-.logout-btn:hover {
+.sidebar .logout-btn:hover {
     background-color: var(--color-error, #e74c3c);
     color: var(--color-text-inverse, white);
 }

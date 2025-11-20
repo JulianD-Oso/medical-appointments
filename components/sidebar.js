@@ -121,10 +121,6 @@ export function createSidebar(options = {}) {
                 <div class="user-avatar">
                     <span class="avatar-text">${getInitials(user?.username || 'Usuario')}</span>
                 </div>
-                <div class="user-info">
-                    <span class="user-name">${user?.username || 'Usuario'}</span>
-                    <span class="user-role">${getRoleDisplay(user?.role) || 'Usuario'}</span>
-                </div>
             </div>
             
             <nav class="sidebar-nav">
@@ -154,13 +150,13 @@ export function createSidebar(options = {}) {
                         </a>
                     </li>
                     <li class="nav-item ${activeItem === 'reportes' ? 'active' : ''}">
-                        <a href="#" class="nav-link" data-tooltip="Reportes">
+                        <a href="coming-soon.html" class="nav-link" data-tooltip="Reportes">
                             <span class="nav-icon">${getReportsIcon()}</span>
                             <span class="nav-text">Reportes</span>
                         </a>
                     </li>
                     <li class="nav-item ${activeItem === 'configuracion' ? 'active' : ''}">
-                        <a href="#" class="nav-link" data-tooltip="Configuración">
+                        <a href="coming-soon.html" class="nav-link" data-tooltip="Configuración">
                             <span class="nav-icon">${getConfigurationIcon()}</span>
                             <span class="nav-text">Configuración</span>
                         </a>
