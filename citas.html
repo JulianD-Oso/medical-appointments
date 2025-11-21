@@ -198,6 +198,7 @@
         <div class="actions">
           <button id="btnBuscar" class="btn">Actualizar</button>
           <button id="btnLimpiar" class="btn-secondary">Limpiar filtros</button>
+          <button id="btnNuevaCita" class="btn btn-primary">Nueva cita</button>
         </div>
         <div id="errorBanner" class="error-banner"></div>
         <div class="status-bar">
@@ -253,6 +254,7 @@
   <script type="module">
     import { isAuthenticated, getCurrentUser, requireAuth } from './utils/session.js';
     import { createSidebar } from './components/sidebar.js';
+    import { createAppointmentForm } from './components/appointmentForm.js';
 
     const API_URL = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/appointment';
 
@@ -283,6 +285,7 @@
     const nextPageBtn = document.getElementById('nextPage');
     const currentPageSpan = document.getElementById('currentPage');
     const pageSizeSelect = document.getElementById('pageSize');
+    const btnNuevaCita = document.getElementById('btnNuevaCita');
     const detailsModal = document.getElementById('detailsModal');
     const modalBody = document.getElementById('modalBody');
     const closeModalBtn = document.getElementById('closeModal');
@@ -574,6 +577,11 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
     }
+    btnNuevaCita.addEventListener('click', () => {
+          const overlay = createAppointmentForm({ onSuccess: async () => { await handleBuscar(); } });
+          document.body.appendChild(overlay);
+        });
   </script>
 </body>
 </html>
+        
