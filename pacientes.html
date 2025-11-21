@@ -445,8 +445,8 @@
               <th>ID</th>
               <th>Nombre</th>
               <th>Teléfono</th>
-              <th>Correo</th>
-              <th>Dirección</th>
+              <th>numero de identificación</th>
+              <th>tipo de identificación</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -501,8 +501,8 @@
               <td>${paciente.id_paciente}</td>
               <td>${paciente.nombre}</td>
               <td>${paciente.telefono}</td>
-              <td>${paciente.correo || 'N/A'}</td>
-              <td>${paciente.direccion || 'N/A'}</td>
+              <td>${paciente.numero_identificacion || 'N/A'}</td>
+              <td>${paciente.tipo_documento || 'N/A'}</td>
               <td>
                 <button class="btn btn-danger btn-eliminar" data-id="${paciente.id_paciente}">Eliminar</button>
               </td>
