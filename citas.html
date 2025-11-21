@@ -254,7 +254,6 @@
   <script type="module">
     import { isAuthenticated, getCurrentUser, requireAuth } from './utils/session.js';
     import { createSidebar } from './components/sidebar.js';
-    import { createAppointmentForm } from './components/appointmentForm.js';
 
     const API_URL = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/appointment';
 
@@ -577,9 +576,15 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
     }
-    btnNuevaCita.addEventListener('click', () => {
-          const overlay = createAppointmentForm({ onSuccess: async () => { await handleBuscar(); } });
-          document.body.appendChild(overlay);
+        btnNuevaCita.addEventListener('click', async () => {
+          try {
+            const mod = await import('./components/appointmentForm.js');
+            const overlay = mod.createAppointmentForm({ onSuccess: async () => { await handleBuscar(); } });
+            document.body.appendChild(overlay);
+          } catch (err) {
+            console.error('Error cargando el formulario de cita:', err);
+            showError('No se pudo cargar el formulario de nueva cita.');
+          }
         });
   </script>
 </body>

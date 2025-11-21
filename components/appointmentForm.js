@@ -3,9 +3,41 @@ const PATIENTS_URL = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/patients';
 const DOCTORS_URL = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/doctors';
 const ACUDIENTE_URL = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/acudiente';
 
+function isFuture(localStr) {
+  const d = new Date(localStr);
+  const now = new Date();
+  return d.getTime() >= now.getTime();
+}
+
+function formatLocalToIso(localStr) {
+  const d = new Date(localStr);
+  return d.toISOString();
+}
+
 export function createAppointmentForm(options = {}) {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
+  const style = document.createElement('style');
+  style.textContent = `
+    .af-form h3 { margin: 0 0 8px 0; color: #00a093; font-family: 'Inter', sans-serif; }
+    .af-input-wrapper { position: relative; }
+    .af-field-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #00a093; }
+    .af-input { width: 100%; padding: 10px 12px 10px 34px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; transition: box-shadow .2s, border-color .2s; background: #fff; }
+    .af-input:focus { border-color: #00a093; box-shadow: 0 0 0 3px rgba(0,160,147,0.15); }
+    .af-textarea { min-height: 90px; resize: vertical; }
+    .af-select { appearance: none; background: #fff; }
+    .af-help { display: block; font-size: 12px; color: #64748b; margin-top: 6px; }
+    .af-error { margin-top: 6px; color: #c0392b; font-size: 12px; font-weight: 600; }
+    .af-actions .btn { padding: 10px 14px; border-radius: 8px; }
+    .af-actions .btn-primary { background: linear-gradient(135deg, #00bfae, #00a093); color: #fff; border: 1px solid #00a093; }
+    .af-actions .btn-primary:hover { background: linear-gradient(135deg, #00a093, #00867a); }
+    .af-actions .btn-secondary { background: #eef2f7; color: #0f172a; border: 1px solid #cbd5e1; }
+    .modal-content { border-radius: 12px; box-shadow: 0 16px 40px rgba(0,0,0,0.25); }
+    .modal-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .modal-item { border: 1px solid #eef2f7; }
+    .modal-label { display: flex; align-items: center; gap: 8px; }
+  `;
+  overlay.appendChild(style);
   const modal = document.createElement('div');
   modal.className = 'modal-content';
   const closeBtn = document.createElement('button');
@@ -15,6 +47,7 @@ export function createAppointmentForm(options = {}) {
   title.textContent = 'Crear nueva cita';
   const form = document.createElement('form');
   form.id = 'appointmentForm';
+  form.className = 'af-form';
   const grid = document.createElement('div');
   grid.className = 'modal-grid';
   const status = document.createElement('div');
@@ -25,6 +58,7 @@ export function createAppointmentForm(options = {}) {
   actions.style.display = 'flex';
   actions.style.justifyContent = 'flex-end';
   actions.style.gap = '8px';
+  actions.className = 'af-actions';
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
   submitBtn.className = 'btn btn-primary';
@@ -43,8 +77,24 @@ export function createAppointmentForm(options = {}) {
   fechaInput.type = 'datetime-local';
   fechaInput.id = 'ap_fecha';
   fechaInput.required = true;
+  const fechaWrap = document.createElement('div');
+  fechaWrap.className = 'af-input-wrapper';
+  const fechaIcon = document.createElement('span');
+  fechaIcon.className = 'af-field-icon';
+  fechaIcon.textContent = '';
+  fechaInput.className = 'af-input';
+  const fechaErr = document.createElement('div');
+  fechaErr.className = 'af-error';
+  fechaErr.id = 'err_ap_fecha';
+  const fechaHelp = document.createElement('small');
+  fechaHelp.className = 'af-help';
+  fechaHelp.textContent = 'Formato: 2025-11-11T20:13:21.833Z';
+  fechaWrap.appendChild(fechaIcon);
+  fechaWrap.appendChild(fechaInput);
   fechaItem.appendChild(fechaLabel);
-  fechaItem.appendChild(fechaInput);
+  fechaItem.appendChild(fechaWrap);
+  fechaItem.appendChild(fechaHelp);
+  fechaItem.appendChild(fechaErr);
 
   const motivoItem = document.createElement('div');
   motivoItem.className = 'modal-item';
@@ -55,8 +105,20 @@ export function createAppointmentForm(options = {}) {
   motivoInput.type = 'text';
   motivoInput.id = 'ap_motivo';
   motivoInput.required = true;
+  const motivoWrap = document.createElement('div');
+  motivoWrap.className = 'af-input-wrapper';
+  const motivoIcon = document.createElement('span');
+  motivoIcon.className = 'af-field-icon';
+  motivoIcon.textContent = '';
+  motivoInput.className = 'af-input';
+  const motivoErr = document.createElement('div');
+  motivoErr.className = 'af-error';
+  motivoErr.id = 'err_ap_motivo';
+  motivoWrap.appendChild(motivoIcon);
+  motivoWrap.appendChild(motivoInput);
   motivoItem.appendChild(motivoLabel);
-  motivoItem.appendChild(motivoInput);
+  motivoItem.appendChild(motivoWrap);
+  motivoItem.appendChild(motivoErr);
 
   const detalleItem = document.createElement('div');
   detalleItem.className = 'modal-item';
@@ -66,8 +128,20 @@ export function createAppointmentForm(options = {}) {
   const detalleInput = document.createElement('textarea');
   detalleInput.id = 'ap_detalle';
   detalleInput.rows = 3;
+  const detalleWrap = document.createElement('div');
+  detalleWrap.className = 'af-input-wrapper';
+  const detalleIcon = document.createElement('span');
+  detalleIcon.className = 'af-field-icon';
+  detalleIcon.textContent = '';
+  detalleInput.className = 'af-input af-textarea';
+  const detalleErr = document.createElement('div');
+  detalleErr.className = 'af-error';
+  detalleErr.id = 'err_ap_detalle';
+  detalleWrap.appendChild(detalleIcon);
+  detalleWrap.appendChild(detalleInput);
   detalleItem.appendChild(detalleLabel);
-  detalleItem.appendChild(detalleInput);
+  detalleItem.appendChild(detalleWrap);
+  detalleItem.appendChild(detalleErr);
 
   const totalItem = document.createElement('div');
   totalItem.className = 'modal-item';
@@ -79,8 +153,20 @@ export function createAppointmentForm(options = {}) {
   totalInput.step = '0.01';
   totalInput.id = 'ap_total';
   totalInput.required = true;
+  const totalWrap = document.createElement('div');
+  totalWrap.className = 'af-input-wrapper';
+  const totalIcon = document.createElement('span');
+  totalIcon.className = 'af-field-icon';
+  totalIcon.textContent = '';
+  totalInput.className = 'af-input';
+  const totalErr = document.createElement('div');
+  totalErr.className = 'af-error';
+  totalErr.id = 'err_ap_total';
+  totalWrap.appendChild(totalIcon);
+  totalWrap.appendChild(totalInput);
   totalItem.appendChild(totalLabel);
-  totalItem.appendChild(totalInput);
+  totalItem.appendChild(totalWrap);
+  totalItem.appendChild(totalErr);
 
   const abonoItem = document.createElement('div');
   abonoItem.className = 'modal-item';
@@ -91,8 +177,20 @@ export function createAppointmentForm(options = {}) {
   abonoInput.type = 'number';
   abonoInput.step = '0.01';
   abonoInput.id = 'ap_abono';
+  const abonoWrap = document.createElement('div');
+  abonoWrap.className = 'af-input-wrapper';
+  const abonoIcon = document.createElement('span');
+  abonoIcon.className = 'af-field-icon';
+  abonoIcon.textContent = '';
+  abonoInput.className = 'af-input';
+  const abonoErr = document.createElement('div');
+  abonoErr.className = 'af-error';
+  abonoErr.id = 'err_ap_abono';
+  abonoWrap.appendChild(abonoIcon);
+  abonoWrap.appendChild(abonoInput);
   abonoItem.appendChild(abonoLabel);
-  abonoItem.appendChild(abonoInput);
+  abonoItem.appendChild(abonoWrap);
+  abonoItem.appendChild(abonoErr);
 
   const restanteItem = document.createElement('div');
   restanteItem.className = 'modal-item';
@@ -104,8 +202,16 @@ export function createAppointmentForm(options = {}) {
   restanteInput.step = '0.01';
   restanteInput.id = 'ap_restante';
   restanteInput.readOnly = true;
+  const restanteWrap = document.createElement('div');
+  restanteWrap.className = 'af-input-wrapper';
+  const restanteIcon = document.createElement('span');
+  restanteIcon.className = 'af-field-icon';
+  restanteIcon.textContent = '';
+  restanteInput.className = 'af-input';
+  restanteWrap.appendChild(restanteIcon);
+  restanteWrap.appendChild(restanteInput);
   restanteItem.appendChild(restanteLabel);
-  restanteItem.appendChild(restanteInput);
+  restanteItem.appendChild(restanteWrap);
 
   const comentariosItem = document.createElement('div');
   comentariosItem.className = 'modal-item';
@@ -115,8 +221,16 @@ export function createAppointmentForm(options = {}) {
   const comentariosInput = document.createElement('textarea');
   comentariosInput.id = 'ap_comentarios';
   comentariosInput.rows = 3;
+  const comentariosWrap = document.createElement('div');
+  comentariosWrap.className = 'af-input-wrapper';
+  const comentariosIcon = document.createElement('span');
+  comentariosIcon.className = 'af-field-icon';
+  comentariosIcon.textContent = '';
+  comentariosInput.className = 'af-input af-textarea';
+  comentariosWrap.appendChild(comentariosIcon);
+  comentariosWrap.appendChild(comentariosInput);
   comentariosItem.appendChild(comentariosLabel);
-  comentariosItem.appendChild(comentariosInput);
+  comentariosItem.appendChild(comentariosWrap);
 
   const pacienteItem = document.createElement('div');
   pacienteItem.className = 'modal-item';
@@ -126,8 +240,20 @@ export function createAppointmentForm(options = {}) {
   const pacienteSelect = document.createElement('select');
   pacienteSelect.id = 'ap_paciente';
   pacienteSelect.required = true;
+  const pacienteWrap = document.createElement('div');
+  pacienteWrap.className = 'af-input-wrapper';
+  const pacienteIcon = document.createElement('span');
+  pacienteIcon.className = 'af-field-icon';
+  pacienteIcon.textContent = '';
+  pacienteSelect.className = 'af-input af-select';
+  const pacienteErr = document.createElement('div');
+  pacienteErr.className = 'af-error';
+  pacienteErr.id = 'err_ap_paciente';
+  pacienteWrap.appendChild(pacienteIcon);
+  pacienteWrap.appendChild(pacienteSelect);
   pacienteItem.appendChild(pacienteLabel);
-  pacienteItem.appendChild(pacienteSelect);
+  pacienteItem.appendChild(pacienteWrap);
+  pacienteItem.appendChild(pacienteErr);
 
   const doctoraItem = document.createElement('div');
   doctoraItem.className = 'modal-item';
@@ -137,8 +263,20 @@ export function createAppointmentForm(options = {}) {
   const doctoraSelect = document.createElement('select');
   doctoraSelect.id = 'ap_doctora';
   doctoraSelect.required = true;
+  const doctoraWrap = document.createElement('div');
+  doctoraWrap.className = 'af-input-wrapper';
+  const doctoraIcon = document.createElement('span');
+  doctoraIcon.className = 'af-field-icon';
+  doctoraIcon.textContent = '';
+  doctoraSelect.className = 'af-input af-select';
+  const doctoraErr = document.createElement('div');
+  doctoraErr.className = 'af-error';
+  doctoraErr.id = 'err_ap_doctora';
+  doctoraWrap.appendChild(doctoraIcon);
+  doctoraWrap.appendChild(doctoraSelect);
   doctoraItem.appendChild(doctoraLabel);
-  doctoraItem.appendChild(doctoraSelect);
+  doctoraItem.appendChild(doctoraWrap);
+  doctoraItem.appendChild(doctoraErr);
 
   const acudienteItem = document.createElement('div');
   acudienteItem.className = 'modal-item';
@@ -147,8 +285,16 @@ export function createAppointmentForm(options = {}) {
   acudienteLabel.textContent = 'Acudiente (opcional)';
   const acudienteSelect = document.createElement('select');
   acudienteSelect.id = 'ap_acudiente';
+  const acudienteWrap = document.createElement('div');
+  acudienteWrap.className = 'af-input-wrapper';
+  const acudienteIcon = document.createElement('span');
+  acudienteIcon.className = 'af-field-icon';
+  acudienteIcon.textContent = '';
+  acudienteSelect.className = 'af-input af-select';
+  acudienteWrap.appendChild(acudienteIcon);
+  acudienteWrap.appendChild(acudienteSelect);
   acudienteItem.appendChild(acudienteLabel);
-  acudienteItem.appendChild(acudienteSelect);
+  acudienteItem.appendChild(acudienteWrap);
 
   grid.appendChild(fechaItem);
   grid.appendChild(motivoItem);
@@ -180,6 +326,58 @@ export function createAppointmentForm(options = {}) {
 
   totalInput.addEventListener('input', computeRestante);
   abonoInput.addEventListener('input', computeRestante);
+  function validateField(id, valid, message) {
+    const el = document.getElementById('err_' + id);
+    if (!el) return true;
+    el.textContent = valid ? '' : message;
+    const input = document.getElementById(id);
+    if (input) input.setAttribute('aria-invalid', valid ? 'false' : 'true');
+    return valid;
+  }
+
+  fechaInput.addEventListener('input', () => {
+    const v = fechaInput.value;
+    const ok = !!v && !isNaN(new Date(v).getTime()) && isFuture(v);
+    validateField('ap_fecha', ok, 'Seleccione una fecha válida en el futuro.');
+  });
+  motivoInput.addEventListener('input', () => {
+    const v = motivoInput.value.trim();
+    validateField('ap_motivo', v.length > 0, 'El motivo es requerido.');
+  });
+  detalleInput.addEventListener('input', () => {
+    const v = detalleInput.value.trim();
+    validateField('ap_detalle', v.length > 0, 'El detalle es requerido.');
+  });
+  totalInput.addEventListener('input', () => {
+    const v = parseFloat(totalInput.value);
+    validateField('ap_total', !isNaN(v) && v > 0, 'Ingrese un valor total válido.');
+  });
+  abonoInput.addEventListener('input', () => {
+    const v = parseFloat(abonoInput.value || '0');
+    const t = parseFloat(totalInput.value || '0');
+    validateField('ap_abono', !isNaN(v) && v >= 0 && v <= t, 'El abono no puede exceder el total.');
+  });
+  pacienteSelect.addEventListener('change', () => {
+    const ok = !!pacienteSelect.value;
+    validateField('ap_paciente', ok, 'Seleccione un paciente.');
+  });
+  doctoraSelect.addEventListener('change', () => {
+    const ok = !!doctoraSelect.value;
+    validateField('ap_doctora', ok, 'Seleccione una doctora.');
+  });
+
+  const focusablesQuery = 'button, [href], input, select, textarea';
+  function trapFocus(e) {
+    if (e.key !== 'Tab') return;
+    const focusables = modal.querySelectorAll(focusablesQuery);
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+  overlay.addEventListener('keydown', trapFocus);
+  overlay.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (options.onClose) options.onClose(); overlay.remove(); } });
 
   closeBtn.addEventListener('click', () => {
     if (options.onClose) options.onClose();
@@ -204,7 +402,21 @@ export function createAppointmentForm(options = {}) {
     const pacienteId = pacienteSelect.value;
     const doctoraId = doctoraSelect.value;
     const acudienteId = acudienteSelect.value || null;
-    if (!fechaVal || !motivoVal || isNaN(totalVal) || !pacienteId || !doctoraId) {
+    const vFecha = !!fechaVal && !isNaN(new Date(fechaVal).getTime()) && isFuture(fechaVal);
+    const vMotivo = motivoVal.length > 0;
+    const vDetalle = detalleVal.length > 0;
+    const vTotal = !isNaN(totalVal) && totalVal > 0;
+    const vAbono = !isNaN(abonoVal) && abonoVal >= 0 && abonoVal <= totalVal;
+    const vPaciente = !!pacienteId;
+    const vDoctora = !!doctoraId;
+    validateField('ap_fecha', vFecha, 'Seleccione una fecha válida en el futuro.');
+    validateField('ap_motivo', vMotivo, 'El motivo es requerido.');
+    validateField('ap_detalle', vDetalle, 'El detalle es requerido.');
+    validateField('ap_total', vTotal, 'Ingrese un valor total válido.');
+    validateField('ap_abono', vAbono, 'El abono no puede exceder el total.');
+    validateField('ap_paciente', vPaciente, 'Seleccione un paciente.');
+    validateField('ap_doctora', vDoctora, 'Seleccione una doctora.');
+    if (!(vFecha && vMotivo && vDetalle && vTotal && vAbono && vPaciente && vDoctora)) {
       status.textContent = 'Complete los campos requeridos.';
       return;
     }
@@ -212,7 +424,7 @@ export function createAppointmentForm(options = {}) {
     submitBtn.textContent = 'Guardando...';
     try {
       const payload = {
-        fecha: new Date(fechaVal).getTime(),
+        fecha: formatLocalToIso(fechaVal),
         motivo: motivoVal,
         detalle: detalleVal,
         valor_total: Number(totalVal),
@@ -266,5 +478,17 @@ export function createAppointmentForm(options = {}) {
     }
   })();
 
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  const yyyy = now.getFullYear();
+  const mm = pad(now.getMonth() + 1);
+  const dd = pad(now.getDate());
+  const hh = pad(now.getHours());
+  const min = pad(now.getMinutes());
+  fechaInput.value = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+  setTimeout(() => fechaInput.focus(), 0);
+
   return overlay;
 }
+
+export { formatLocalToIso, isFuture };
