@@ -206,6 +206,11 @@ function setupEventListeners(sidebar, collapsible) {
                 // Save collapsed state to localStorage
                 const isCollapsed = sidebar.classList.contains('collapsed');
                 localStorage.setItem('sidebar_collapsed', isCollapsed);
+
+                // Emit event to sync layout with sidebar state
+                window.dispatchEvent(new CustomEvent('sidebarToggle', {
+                    detail: { collapsed: isCollapsed }
+                }));
             });
         }
     }
@@ -264,6 +269,10 @@ function setupEventListeners(sidebar, collapsible) {
         const savedCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
         if (savedCollapsed) {
             sidebar.classList.add('collapsed');
+            // Emit initial state for listeners on page load
+            window.dispatchEvent(new CustomEvent('sidebarToggle', {
+                detail: { collapsed: true }
+            }));
         }
     }
 }
