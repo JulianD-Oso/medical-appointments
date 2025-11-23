@@ -23,6 +23,7 @@
     transition: width 0.3s ease, background-color var(--theme-transition-duration, 200ms) ease;
     z-index: 1000;
     box-shadow: 2px 0 10px var(--color-shadow, rgba(0, 0, 0, 0.1));
+    overflow-x: hidden;
 }
 
 /* Collapsed Sidebar */
@@ -126,6 +127,7 @@
 .sidebar-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: var(--space-4, 2.125rem) 0;
 }
 
@@ -271,6 +273,24 @@
 .sidebar.collapsed .nav-icon-svg {
     width: 20px;
     height: 20px;
+}
+
+/* Ajustes de colapso para evitar barras no deseadas */
+.sidebar.collapsed .sidebar-content {
+    /* Mantener scroll funcional pero ocultar la barra visual */
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge legacy */
+}
+
+.sidebar.collapsed .sidebar-content::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.sidebar.collapsed .nav-link {
+    padding: var(--space-2, 0.8125rem) var(--space-2, 0.8125rem);
+    justify-content: center;
 }
 
 .nav-text {

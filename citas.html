@@ -23,9 +23,12 @@
   <style>
     /* Estilos específicos para la página de Citas */
     body {
-      background: #e0fdfa;
+      background: var(--color-background, #ffffff);
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: var(--font-family-primary, 'Inter', system-ui, sans-serif);
+      color: var(--color-text-primary, #333333);
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  color var(--theme-transition-duration, 200ms) ease;
     }
 
     .page-header {
@@ -34,7 +37,7 @@
     }
 
     .page-header h1 {
-      color: #00bfae;
+      color: var(--color-primary, #00bfae);
       margin: 0 0 8px 0;
     }
 
@@ -53,14 +56,14 @@
 
     .control label {
       font-weight: 600;
-      color: #005d56;
+      color: var(--color-text-primary, #005d56);
       font-size: 14px;
     }
 
     .control input, .control select {
       padding: 8px;
       border-radius: 6px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--color-border, #cccccc);
       outline: none;
     }
 
@@ -72,8 +75,8 @@
     }
 
     .btn-secondary {
-      background-color: #00a093;
-      color: #fff;
+      background-color: var(--color-secondary, #00a093);
+      color: var(--color-text-inverse, #ffffff);
       padding: 10px 14px;
       border: none;
       border-radius: 4px;
@@ -83,7 +86,7 @@
     .table-container {
       overflow-x: auto;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 191, 174, 0.1);
+      box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.08));
     }
 
     .status-bar {
@@ -91,15 +94,15 @@
       justify-content: space-between;
       align-items: center;
       margin: 10px 0;
-      color: #555;
+      color: var(--color-text-secondary, #555);
       font-size: 14px;
     }
 
     .error-banner {
       display: none;
-      background: #ffe8e6;
-      border: 1px solid #ffb3aa;
-      color: #c0392b;
+      background: var(--color-background-secondary, #ffe8e6);
+      border: 1px solid var(--color-error, #ffb3aa);
+      color: var(--color-error, #c0392b);
       padding: 10px 12px;
       border-radius: 6px;
       margin-bottom: 10px;
@@ -107,7 +110,7 @@
 
     .empty-state {
       text-align: center;
-      color: #666;
+      color: var(--color-text-secondary, #666);
       margin: 16px 0;
     }
 

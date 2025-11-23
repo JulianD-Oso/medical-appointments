@@ -32,6 +32,9 @@ class ThemeManager {
     
     const themeToApply = savedTheme || (systemPrefersDark ? 'dark' : 'light');
     this.applyTheme(themeToApply, false); // No guardar en init
+
+    // Activar transiciones suaves globales para evitar parpadeos
+    this.enableSmoothTransition();
     
     // Escuchar cambios en la preferencia del sistema
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {

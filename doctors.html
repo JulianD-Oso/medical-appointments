@@ -28,13 +28,13 @@
     }
     
     .page-header h1 {
-      color: #00bfae;
+      color: var(--color-primary, #00bfae);
       font-size: 2.5rem;
       margin-bottom: 10px;
     }
     
     .page-header p {
-      color: #666;
+      color: var(--color-text-secondary, #666666);
       font-size: 1.1rem;
     }
     
@@ -52,7 +52,7 @@
     .table-container {
       overflow-x: auto;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 191, 174, 0.1);
+      box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.08));
     }
     
     #tablaDoctoras {
@@ -61,7 +61,7 @@
     }
     
     #tablaDoctoras th {
-      background: linear-gradient(135deg, #00bfae, #00a093);
+      background: linear-gradient(135deg, var(--color-primary, #00bfae), var(--color-primary-hover, #00a093));
       font-weight: 600;
       text-transform: uppercase;
       font-size: 14px;
@@ -71,7 +71,7 @@
     #tablaDoctoras td {
       border-left: none;
       border-right: none;
-      border-bottom: 1px solid #e0fdfa;
+      border-bottom: 1px solid var(--color-border, #e0fdfa);
     }
     
     /* Mejoras en el formulario */
@@ -91,13 +91,13 @@
     }
     
     .btn-primary {
-      background: linear-gradient(135deg, #00bfae, #00a093);
-      box-shadow: 0 2px 4px rgba(0, 191, 174, 0.3);
+      background: linear-gradient(135deg, var(--color-primary, #00bfae), var(--color-primary-hover, #00a093));
+      box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0,0,0,0.05));
     }
     
     .btn-primary:hover {
-      background: linear-gradient(135deg, #00a093, #00867a);
-      box-shadow: 0 4px 8px rgba(0, 191, 174, 0.4);
+      background: linear-gradient(135deg, var(--color-primary-hover, #00a093), var(--color-primary, #00867a));
+      box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06));
     }
     
     /* Estadísticas */
@@ -109,12 +109,12 @@
     }
     
     .stat-card {
-      background: linear-gradient(135deg, #00bfae, #00a093);
-      color: white;
+      background: linear-gradient(135deg, var(--color-primary, #00bfae), var(--color-primary-hover, #00a093));
+      color: var(--color-text-inverse, #ffffff);
       padding: 20px;
       border-radius: 12px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0, 191, 174, 0.3);
+      box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06));
     }
     
     .stat-number {
