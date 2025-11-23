@@ -119,6 +119,18 @@ if (type === 'success') {
 - `--color-error-hover`: Color de error en hover
 - `--theme-transition-duration`: Duración de transiciones
 
+## Alineación visual: línea del header con la del sidebar
+
+Para lograr una continuidad perfecta de la línea delimitadora entre el `header` y el `sidebar`, se realizaron los siguientes ajustes en `styles/home.css`:
+
+- Se incrementó la altura mínima del `header` de `4.375rem` (~70px) a `5rem` (~80px) para que su borde inferior se alinee exactamente con el borde inferior de `.sidebar-header`.
+- Se unificó el color del borde inferior del `header` usando `var(--color-sidebar-hover)` para que coincida con el color de la línea del `sidebar`.
+
+Resultados:
+- Grosor y estilo del borde: 1px sólido, consistente con el `sidebar`.
+- Longitud del borde: 100% del ancho del área principal, garantizando que nunca sea más corto que la línea del `sidebar`.
+- Impacto en layout: Cambios confinados al `header`; no afectan otros elementos ni el sistema de temas.
+
 ## Características Implementadas
 
 ✅ **Persistencia del tema**: El tema seleccionado se guarda en localStorage

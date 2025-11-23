@@ -118,11 +118,12 @@ body {
 /* Header */
 .header {
     background-color: var(--color-surface, #ffffff);
-    border-bottom: 1px solid var(--color-border, #e1e8ed);
+    border-bottom: 1px solid var(--color-sidebar-hover, #34495e);
     color: var(--color-text-primary, #2c3e50);
     padding: 0 var(--space-4, 2.125rem);
     /* Usar altura flexible para evitar recortes cuando cambie el contenido */
-    min-height: 4.375rem;
+    /* Ajustar altura para alinear el borde inferior con el del sidebar */
+    min-height: 5rem; /* ~80px para coincidir con sidebar-header (40px contenido + 20px + 20px) */
     height: auto;
     display: flex;
     align-items: center;
