@@ -149,6 +149,14 @@
     .modal-label { color: #005d56; font-weight: 600; font-size: 12px; margin-bottom: 6px; display: block; }
     .modal-value { color: #222; font-size: 14px; word-break: break-word; }
   </style>
+  <!-- Feedback visual para operaciones (notificaciones) -->
+  <style>
+    .notification { position: fixed; top: 20px; right: 20px; padding: 1rem 1.25rem; border-radius: 6px; color: #fff; font-weight: 500; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: slideIn 0.25s ease; }
+    .notification.success { background: var(--success-color, #4CAF50); }
+    .notification.error { background: var(--accent-color, #f44336); }
+    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(20px); opacity: 0; } }
+  </style>
 </head>
 <body>
   <!-- Pantallas de estado globales -->
@@ -401,12 +409,38 @@
     }
 
     function handleLimpiar() {
-      // Limpiar filtros opcionales y re-renderizar resultados actuales
+      // 1) Ocultar errores y cerrar modales
       errorBanner.style.display = 'none';
+      if (detailsModal && detailsModal.style.display === 'flex') {
+        hideModal();
+      }
+
+      // 2) Restablecer rango de fechas por defecto (últimos 7 días)
+      const now = new Date();
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      startDateInput.value = toInputDateTimeLocal(weekAgo);
+      endDateInput.value = toInputDateTimeLocal(now);
+
+      // 3) Limpiar filtros visibles
       filterMotivoInput.value = '';
       filterPacienteInput.value = '';
+
+      // 4) Restablecer paginación y tamaño de página
+      pageSizeSelect.value = '10';
+      pageSize = 10;
       currentPage = 1;
-      aplicarFiltrosYRerender();
+
+      // 5) Resetear estado filtrado y actualizar
+      citasFiltradas = [...citas];
+
+      // 6) Re-consultar según nuevo rango y mostrar feedback
+      handleBuscar()
+        .then(() => {
+          showNotification('Filtros limpiados', 'success');
+        })
+        .catch(() => {
+          showNotification('No se pudo actualizar luego de limpiar', 'error');
+        });
     }
 
     function aplicarFiltrosYRerender() {
@@ -523,6 +557,15 @@
 
     function setStatus(msg) {
       statusText.textContent = msg || statusText.textContent;
+    }
+
+    // Feedback visual genérico
+    function showNotification(message, type = 'success') {
+      const n = document.createElement('div');
+      n.className = `notification ${type}`;
+      n.textContent = message;
+      document.body.appendChild(n);
+      setTimeout(() => { n.style.animation = 'slideOut 0.25s ease'; setTimeout(() => n.remove(), 250); }, 2000);
     }
 
     function formatDateDisplay(date) {

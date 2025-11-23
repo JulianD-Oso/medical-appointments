@@ -429,8 +429,35 @@
               <input type="email" id="correo" name="correo" required>
             </div>
             <div class="form-group">
-              <label for="direccion">Dirección:</label>
-              <input type="text" id="direccion" name="direccion" required>
+              <label for="numero_identificacion">Número de Cédula</label>
+              <input
+                type="text"
+                id="numero_identificacion"
+                name="numero_identificacion"
+                inputmode="numeric"
+                pattern="^[0-9]{6,12}$"
+                aria-describedby="cedulaHelp cedulaError"
+                aria-invalid="false"
+                required
+              >
+              <div id="cedulaHelp" class="status-inline" role="note">Solo dígitos. 6 a 12 caracteres.</div>
+              <div id="cedulaError" class="visually-hidden" role="alert"></div>
+              <button type="button" id="buscarDireccionBtn" class="btn" aria-label="Buscar dirección por cédula">Buscar dirección</button>
+            </div>
+            <div class="form-group">
+              <label for="direccion">Dirección</label>
+              <input
+                type="text"
+                id="direccion"
+                name="direccion"
+                aria-describedby="direccionStatus"
+                aria-invalid="false"
+                required
+              >
+              <div id="direccionStatus" class="status-inline" role="status" aria-live="polite"></div>
+              <label class="status-inline info" style="display:block;">
+                <input type="checkbox" id="editarDireccionManual" aria-controls="direccion"> Editar dirección manualmente
+              </label>
             </div>
           </div>
           <button type="submit" class="btn btn-primary">Guardar Paciente</button>
@@ -464,7 +491,11 @@
       const nombreInput = document.getElementById('nombre');
       const telefonoInput = document.getElementById('telefono');
       const correoInput = document.getElementById('correo');
+      const numeroIdentificacionInput = document.getElementById('numero_identificacion');
+      const buscarDireccionBtn = document.getElementById('buscarDireccionBtn');
       const direccionInput = document.getElementById('direccion');
+      const editarDireccionManual = document.getElementById('editarDireccionManual');
+      const direccionStatus = document.getElementById('direccionStatus');
       const submitButton = formCrearPaciente.querySelector('button[type="submit"]');
 
       // Escuchar cambios de tema para actualizar elementos dinámicamente
@@ -561,9 +592,24 @@
         const telefono = telefonoInput.value.trim();
         const correo = correoInput.value.trim();
         const direccion = direccionInput.value.trim();
+        const numero_identificacion = numeroIdentificacionInput.value.trim();
 
         if (!nombre || !telefono) {
           showNotification('Por favor, complete al menos el nombre y teléfono.', 'error');
+          return;
+        }
+
+        // Validar cédula y dirección si están presentes
+        const cedulaCheck = validateCedula(numero_identificacion);
+        if (!cedulaCheck.valid) {
+          setInputValidity(numeroIdentificacionInput, false, document.getElementById('cedulaError'), cedulaCheck.message);
+          showNotification('Número de cédula inválido.', 'error');
+          return;
+        }
+        const dirCheck = validateDireccion(direccion);
+        if (!dirCheck.valid) {
+          setInputValidity(direccionInput, false, null, dirCheck.message);
+          showNotification('Dirección inválida: ' + dirCheck.message, 'error');
           return;
         }
 
@@ -576,7 +622,7 @@
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nombre, telefono, correo, direccion }),
+            body: JSON.stringify({ nombre, telefono, correo, direccion, numero_identificacion }),
           });
 
           if (!response.ok) {
