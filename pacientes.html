@@ -181,6 +181,53 @@
       background-color: var(--color-error-hover, #da190b);
     }
     
+    /* Accesibilidad: texto oculto para lectores de pantalla */
+    .visually-hidden {
+      position: absolute !important;
+      height: 1px; width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap;
+      border: 0; padding: 0; margin: -1px;
+    }
+
+    /* Columna de acciones compacta y celda ajustada */
+    .actions-col { width: 56px; }
+    .actions-cell { padding: 8px; }
+
+    /* Botón icónico minimalista para eliminar */
+    .btn-icon {
+      background: transparent;
+      border: 1px solid var(--color-border, #ccc);
+      color: var(--color-text-primary, #333333);
+      width: 28px; height: 28px;
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 150ms ease, background-color var(--theme-transition-duration, 200ms) ease, border-color var(--theme-transition-duration, 200ms) ease, color var(--theme-transition-duration, 200ms) ease;
+    }
+
+    .btn-icon svg { width: 16px; height: 16px; }
+
+    .btn-icon:hover {
+      transform: translateY(-1px);
+      background-color: var(--color-background-secondary, #f9f9f9);
+      border-color: var(--color-error, #f44336);
+      color: var(--color-error, #f44336);
+    }
+
+    .btn-icon:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 191, 174, 0.35);
+    }
+
+    @media (max-width: 480px) {
+      .actions-col { width: 44px; }
+      .btn-icon { width: 24px; height: 24px; border-radius: 5px; }
+      .btn-icon svg { width: 14px; height: 14px; }
+    }
+    
     .loading-screen {
       position: fixed;
       top: 0;
@@ -414,53 +461,37 @@
       <!-- Formulario mejorado -->
       <div class="form-container">
         <h2>Crear Nuevo Paciente</h2>
-        <form id="formCrearPaciente">
+        <form id="formCrearPaciente" novalidate>
           <div class="form-grid">
             <div class="form-group">
               <label for="nombre">Nombre Completo:</label>
-              <input type="text" id="nombre" name="nombre" required>
+              <input type="text" id="nombre" name="nombre" minlength="3" maxlength="100" required aria-describedby="nombreError" aria-invalid="false">
+              <div id="nombreError" class="status-inline error" role="alert" aria-live="polite"></div>
             </div>
             <div class="form-group">
               <label for="telefono">Teléfono:</label>
-              <input type="text" id="telefono" name="telefono" required>
+              <input type="tel" id="telefono" name="telefono" required aria-describedby="telefonoError" aria-invalid="false" placeholder="Ej: +51999999999">
+              <div id="telefonoError" class="status-inline error" role="alert" aria-live="polite"></div>
             </div>
             <div class="form-group">
               <label for="correo">Correo Electrónico:</label>
-              <input type="email" id="correo" name="correo" required>
+              <input type="email" id="correo" name="correo" required aria-describedby="correoError" aria-invalid="false" placeholder="usuario@dominio.com">
+              <div id="correoError" class="status-inline error" role="alert" aria-live="polite"></div>
             </div>
             <div class="form-group">
-              <label for="numero_identificacion">Número de Cédula</label>
-              <input
-                type="text"
-                id="numero_identificacion"
-                name="numero_identificacion"
-                inputmode="numeric"
-                pattern="^[0-9]{6,12}$"
-                aria-describedby="cedulaHelp cedulaError"
-                aria-invalid="false"
-                required
-              >
-              <div id="cedulaHelp" class="status-inline" role="note">Solo dígitos. 6 a 12 caracteres.</div>
-              <div id="cedulaError" class="visually-hidden" role="alert"></div>
-              <button type="button" id="buscarDireccionBtn" class="btn" aria-label="Buscar dirección por cédula">Buscar dirección</button>
+              <label for="numero_identificacion">Número de Identificación</label>
+              <input type="text" id="numero_identificacion" name="numero_identificacion" required aria-describedby="identificacionError" aria-invalid="false" placeholder="Alfanumérico, 6-20 caracteres">
+              <div id="identificacionError" class="status-inline error" role="alert" aria-live="polite"></div>
             </div>
             <div class="form-group">
-              <label for="direccion">Dirección</label>
-              <input
-                type="text"
-                id="direccion"
-                name="direccion"
-                aria-describedby="direccionStatus"
-                aria-invalid="false"
-                required
-              >
-              <div id="direccionStatus" class="status-inline" role="status" aria-live="polite"></div>
-              <label class="status-inline info" style="display:block;">
-                <input type="checkbox" id="editarDireccionManual" aria-controls="direccion"> Editar dirección manualmente
-              </label>
+              <label for="tipo_documento">Tipo de documento</label>
+              <select id="tipo_documento" name="tipo_documento" required aria-describedby="tipoDocumentoError" aria-invalid="false" disabled>
+                <option value="" selected>Cargando tipos de documento...</option>
+              </select>
+              <div id="tipoDocumentoError" class="status-inline error" role="alert" aria-live="polite"></div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Guardar Paciente</button>
+          <button type="submit" class="btn btn-primary" id="submitPaciente" disabled>Guardar Paciente</button>
         </form>
       </div>
       
@@ -474,7 +505,8 @@
               <th>Teléfono</th>
               <th>numero de identificación</th>
               <th>tipo de identificación</th>
-              <th>Acciones</th>
+              <th>Correo Electrónico</th>
+              <th class="actions-col"><span class="visually-hidden">Acciones</span></th>
             </tr>
           </thead>
           <tbody>
@@ -492,11 +524,9 @@
       const telefonoInput = document.getElementById('telefono');
       const correoInput = document.getElementById('correo');
       const numeroIdentificacionInput = document.getElementById('numero_identificacion');
-      const buscarDireccionBtn = document.getElementById('buscarDireccionBtn');
-      const direccionInput = document.getElementById('direccion');
-      const editarDireccionManual = document.getElementById('editarDireccionManual');
-      const direccionStatus = document.getElementById('direccionStatus');
-      const submitButton = formCrearPaciente.querySelector('button[type="submit"]');
+      const tipoDocumentoSelect = document.getElementById('tipo_documento');
+      const submitButton = document.getElementById('submitPaciente');
+      const existingIds = new Set();
 
       // Escuchar cambios de tema para actualizar elementos dinámicamente
       window.addEventListener('themechange', (e) => {
@@ -513,6 +543,8 @@
           const pacientes = await response.json();
           renderPacientes(pacientes);
           updateStatistics(pacientes);
+          existingIds.clear();
+          pacientes.forEach(p => { if (p.numero_identificacion) existingIds.add(String(p.numero_identificacion).toLowerCase()); });
         } catch (error) {
           console.error('Error:', error);
           showNotification('No se pudo cargar la lista de pacientes.', 'error');
@@ -534,8 +566,13 @@
               <td>${paciente.telefono}</td>
               <td>${paciente.numero_identificacion || 'N/A'}</td>
               <td>${paciente.tipo_documento || 'N/A'}</td>
-              <td>
-                <button class="btn btn-danger btn-eliminar" data-id="${paciente.id_paciente}">Eliminar</button>
+              <td>${paciente.correo_electronico || 'N/A'}</td>
+              <td class="actions-cell">
+                <button class="btn-icon btn-eliminar" data-id="${paciente.id_paciente}" title="Eliminar" aria-label="Eliminar paciente ${paciente.nombre}">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor">
+                    <path d="M9 3h6a1 1 0 011 1v1h4a1 1 0 110 2h-1v12a3 3 0 01-3 3H8a3 3 0 01-3-3V7H4a1 1 0 110-2h4V4a1 1 0 011-1zm1 3h4V4h-4v2zM7 7v12a1 1 0 001 1h8a1 1 0 001-1V7H7z"></path>
+                  </svg>
+                </button>
               </td>
             `;
             tablaPacientes.appendChild(fila);
@@ -586,30 +623,128 @@
         }, 3000);
       };
 
+      // --- Cargar tipos de documento desde API ---
+      const DOCUMENT_TYPES_URL = 'https://n8n.srv1065547.hstgr.cloud/webhook/document_types';
+      const populateDocumentTypes = (types) => {
+        // Limpia opciones actuales
+        tipoDocumentoSelect.innerHTML = '';
+        // Placeholder accesible
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = 'Selecciona una opción';
+        placeholder.selected = true;
+        placeholder.disabled = true;
+        tipoDocumentoSelect.appendChild(placeholder);
+        // Agregar opciones desde API
+        types.forEach(item => {
+          const opt = document.createElement('option');
+          // Usa el texto de tipo_documento como value y muestra capitalizado
+          opt.value = String(item.id || '').trim();
+          opt.textContent = item.tipo_documento || 'Sin nombre';
+          opt.setAttribute('data-id', item.id);
+          tipoDocumentoSelect.appendChild(opt);
+        });
+        tipoDocumentoSelect.disabled = false;
+        updateSubmitState();
+      };
+
+      const fetchDocumentTypes = async () => {
+        try {
+          tipoDocumentoSelect.disabled = true;
+          tipoDocumentoSelect.innerHTML = '<option value="" selected>Cargando tipos de documento...</option>';
+          const res = await fetch(DOCUMENT_TYPES_URL);
+          if (!res.ok) throw new Error('Respuesta no OK');
+          const json = await res.json();
+          const types = Array.isArray(json.data) ? json.data : [];
+          if (!types.length) throw new Error('Lista vacía');
+          populateDocumentTypes(types);
+        } catch (err) {
+          console.error('[Pacientes] Error al cargar tipos de documento', err);
+          showNotification('No se pudo cargar tipos de documento. Usando valores por defecto.', 'error');
+          // Fallback para mantener funcionalidad
+          const fallback = [
+            { id: -1, tipo_documento: 'cedula' },
+            { id: -2, tipo_documento: 'documento de identidad' },
+            { id: -3, tipo_documento: 'NIT' },
+            { id: -4, tipo_documento: 'pasaporte' }
+          ];
+          populateDocumentTypes(fallback);
+        }
+      };
+
+      // --- Validaciones en tiempo real y utilidades ---
+      const setError = (input, errorEl, message) => {
+        input.setAttribute('aria-invalid', message ? 'true' : 'false');
+        if (errorEl) errorEl.textContent = message || '';
+      };
+
+      const validateNombre = (v) => {
+        const value = v.trim();
+        if (value.length < 3) return 'Debe tener al menos 3 caracteres';
+        if (value.length > 100) return 'No debe exceder 100 caracteres';
+        return '';
+      };
+
+      const validateTelefono = (v) => {
+        const value = v.trim();
+        const e164 = /^\+?[1-9]\d{7,14}$/;
+        if (!e164.test(value)) return 'Formato internacional inválido. Ej: +51999999999';
+        return '';
+      };
+
+      const validateCorreo = (v) => {
+        const value = v.trim();
+        const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+        if (!emailRx.test(value)) return 'Correo inválido';
+        return '';
+      };
+
+      const validateIdentificacion = (v) => {
+        const value = v.trim();
+        const idRx = /^[a-zA-Z0-9\-]{6,20}$/;
+        if (!idRx.test(value)) return 'Alfanumérico de 6 a 20 caracteres';
+        if (existingIds.has(value.toLowerCase())) return 'Ya existe un paciente con este número';
+        return '';
+      };
+
+      const validateTipoDocumento = (v) => {
+        if (!v) return 'Selecciona un tipo de documento';
+        return '';
+      };
+
+      const updateSubmitState = () => {
+        const nombreErr = validateNombre(nombreInput.value);
+        const telErr = validateTelefono(telefonoInput.value);
+        const emailErr = validateCorreo(correoInput.value);
+        const idErr = validateIdentificacion(numeroIdentificacionInput.value);
+        const tipoErr = validateTipoDocumento(tipoDocumentoSelect.value);
+
+        setError(nombreInput, document.getElementById('nombreError'), nombreErr);
+        setError(telefonoInput, document.getElementById('telefonoError'), telErr);
+        setError(correoInput, document.getElementById('correoError'), emailErr);
+        setError(numeroIdentificacionInput, document.getElementById('identificacionError'), idErr);
+        setError(tipoDocumentoSelect, document.getElementById('tipoDocumentoError'), tipoErr);
+
+        const allValid = !nombreErr && !telErr && !emailErr && !idErr && !tipoErr;
+        submitButton.disabled = !allValid;
+        return allValid;
+      };
+
+      [nombreInput, telefonoInput, correoInput, numeroIdentificacionInput, tipoDocumentoSelect].forEach(el => {
+        el.addEventListener('input', updateSubmitState);
+        el.addEventListener('change', updateSubmitState);
+      });
+
       formCrearPaciente.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nombre = nombreInput.value.trim();
         const telefono = telefonoInput.value.trim();
         const correo = correoInput.value.trim();
-        const direccion = direccionInput.value.trim();
         const numero_identificacion = numeroIdentificacionInput.value.trim();
-
-        if (!nombre || !telefono) {
-          showNotification('Por favor, complete al menos el nombre y teléfono.', 'error');
-          return;
-        }
-
-        // Validar cédula y dirección si están presentes
-        const cedulaCheck = validateCedula(numero_identificacion);
-        if (!cedulaCheck.valid) {
-          setInputValidity(numeroIdentificacionInput, false, document.getElementById('cedulaError'), cedulaCheck.message);
-          showNotification('Número de cédula inválido.', 'error');
-          return;
-        }
-        const dirCheck = validateDireccion(direccion);
-        if (!dirCheck.valid) {
-          setInputValidity(direccionInput, false, null, dirCheck.message);
-          showNotification('Dirección inválida: ' + dirCheck.message, 'error');
+        const tipo_documento = tipoDocumentoSelect.value;
+        console.info('[Pacientes] Intento de envío', { nombre, telefono, correo, numero_identificacion, tipo_documento });
+        if (!updateSubmitState()) {
+          showNotification('Corrige los campos marcados antes de enviar.', 'error');
           return;
         }
 
@@ -617,25 +752,30 @@
         submitButton.disabled = true;
 
         try {
+          const payload = { nombre, telefono, correo, numero_identificacion, tipo_documento };
+          console.info('[Pacientes] Enviando payload', payload);
           const response = await fetch(apiBaseUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nombre, telefono, correo, direccion, numero_identificacion }),
+            body: JSON.stringify(payload),
           });
+          console.info('[Pacientes] Respuesta POST', response.status);
 
           if (!response.ok) {
             throw new Error('Error al crear el paciente.');
           }
 
           formCrearPaciente.reset();
+          existingIds.add(numero_identificacion.toLowerCase());
+          updateSubmitState();
           await getPacientes();
           showNotification('Paciente creado con éxito.', 'success');
 
         } catch (error) {
-          console.error('Error:', error);
-          showNotification('No se pudo crear el paciente.', 'error');
+          console.error('[Pacientes] Error en envío', error);
+          showNotification('Error al enviar datos. Verifique conexión y reintente.', 'error');
         } finally {
           submitButton.textContent = 'Guardar Paciente';
           submitButton.disabled = false;
@@ -643,8 +783,9 @@
       });
 
       tablaPacientes.addEventListener('click', async (e) => {
-        if (e.target.classList.contains('btn-eliminar')) {
-          const id_paciente = e.target.getAttribute('data-id');
+        const btn = e.target.closest && e.target.closest('.btn-eliminar');
+        if (btn) {
+          const id_paciente = btn.getAttribute('data-id');
           
           if (confirm('¿Está seguro de que desea eliminar este paciente?')) {
             try {
@@ -671,6 +812,8 @@
         }
       });
 
+      // Cargar tipos de documento y datos de pacientes
+      fetchDocumentTypes().finally(() => updateSubmitState());
       getPacientes();
     });
   </script>
