@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuración - Clínica Maxi Dent</title>
+
+  <!-- Preconnect para Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Google Fonts - Inter y Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/sidebar.css">
+  <link rel="stylesheet" href="styles/common-pages.css">
+
+  <!-- Inicializar sistema de temas -->
+  <script type="module">
+      import { initTheme, ensureThemeInitialized } from './utils/theme.js';
+      initTheme();
+      document.addEventListener('DOMContentLoaded', () => {
+          ensureThemeInitialized();
+      });
+  </script>
+  <style>
+    body {
+      background: var(--color-background, #e0fdfa);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
+      color: var(--color-text-primary, #333333);
+      transition: background-color var(--theme-transition-duration, 200ms) ease,
+                  color var(--theme-transition-duration, 200ms) ease;
+    }
+    .page-header { margin-bottom: 20px; }
+    .wa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .wa-card { background: var(--color-surface, #ffffff); border: 1px solid var(--color-border, #ddd); border-radius: var(--radius-lg, 8px); padding: 20px; }
+    .wa-status { font-weight: 600; }
+    .wa-status.ok { color: #2ecc71; }
+    .wa-status.close { color: #e74c3c; }
+    .wa-qr { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .wa-qr img { max-width: 240px; border: 1px solid var(--color-border, #ddd); border-radius: 8px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { padding: 10px 14px; border-radius: 8px; cursor: pointer; border: 1px solid var(--color-border, #cbd5e1); background: var(--color-surface, #fff); }
+    .btn-primary { background: var(--color-primary, #00bfae); color: var(--color-text-inverse, #fff); border-color: var(--color-primary, #00bfae); }
+    .btn-danger { background: var(--color-error, #e74c3c); color: var(--color-text-inverse, #fff); border-color: var(--color-error, #e74c3c); }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <div class="error-screen" id="errorScreen" style="display:none;">
+    <div class="error-content">
+      <h2>Error de Autenticación</h2>
+      <p id="errorMessage">No tiene permisos para acceder a esta página.</p>
+      <button onclick="window.location.href='/login.html'" class="btn">Ir al Login</button>
+    </div>
+  </div>
+
+  <div id="sidebarContainer"></div>
+
+  <div class="main-content" id="mainContent" style="display:none;">
+    <div class="container">
+      <div class="page-header">
+        <h1>Configuración</h1>
+        <p>Preferencias del sistema</p>
+      </div>
+
+      <div class="form-container">
+        <h2>WhatsApp</h2>
+        <p>Administra la conexión de WhatsApp para la instancia <code>clinica</code>.</p>
+
+        <div class="wa-grid">
+          <div class="wa-card">
+            <h3>Estado de Conexión</h3>
+            <p>Estado actual: <span id="waState" class="wa-status">-</span></p>
+            <div class="actions">
+              <button id="refreshStateBtn" class="btn">Refrescar estado</button>
+            </div>
+          </div>
+
+          <div class="wa-card">
+            <h3>QR de Emparejamiento</h3>
+            <div class="wa-qr">
+              <img id="waQrImage" alt="QR de WhatsApp" style="display:none;" />
+              <div>
+                <span id="waCodeLabel">Código:</span> <code id="waCode">-</code>
+              </div>
+              <div>
+                <span>Intentos:</span> <strong id="waCount">0</strong>
+              </div>
+            </div>
+            <div class="actions">
+              <button id="showQrBtn" class="btn">Mostrar QR</button>
+            </div>
+          </div>
+
+          <div class="wa-card">
+            <h3>Acciones</h3>
+            <p>Use estas acciones para administrar la sesión de WhatsApp.</p>
+            <div class="actions">
+              <button id="logoutBtn" class="btn btn-danger">Desconectar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { isAuthenticated, getCurrentUser, requireAuth } from './utils/session.js';
+    import { createSidebar } from './components/sidebar.js';
+
+    const API_BASE = 'https://evolution.srv1065547.hstgr.cloud/instance';
+    const INSTANCE = 'clinica';
+
+    const stateEl = document.getElementById('waState');
+    const qrImgEl = document.getElementById('waQrImage');
+    const codeEl = document.getElementById('waCode');
+    const countEl = document.getElementById('waCount');
+
+    async function fetchConnectionState() {
+      try {
+        const res = await fetch(`${API_BASE}/connectionState/${INSTANCE}`, {
+          headers: { apikey: '123456.+az1' }
+        });
+        if (!res.ok) throw new Error('Error obteniendo estado');
+        const data = await res.json();
+        const state = data?.instance?.state || 'desconocido';
+        stateEl.textContent = state;
+        stateEl.classList.remove('ok', 'close');
+        if (state === 'open') stateEl.classList.add('ok');
+        if (state === 'close') stateEl.classList.add('close');
+      } catch (e) {
+        stateEl.textContent = 'error';
+        stateEl.classList.remove('ok');
+        stateEl.classList.add('close');
+        console.error(e);
+      }
+    }
+
+    async function fetchQr() {
+      try {
+        const res = await fetch(`${API_BASE}/connect/${INSTANCE}`, {
+          headers: { apikey: '123456.+az1' }
+        });
+        if (!res.ok) throw new Error('Error obteniendo QR');
+        const data = await res.json();
+        const base64 = data?.base64 || null;
+        const code = data?.code || null;
+        const count = data?.count || 0;
+
+        countEl.textContent = String(count);
+        codeEl.textContent = code ? code : '-';
+
+        if (base64) {
+          qrImgEl.src = base64;
+          qrImgEl.style.display = 'block';
+        } else {
+          qrImgEl.style.display = 'none';
+        }
+      } catch (e) {
+        qrImgEl.style.display = 'none';
+        codeEl.textContent = 'error';
+        console.error(e);
+      }
+    }
+
+    async function logoutInstance() {
+      try {
+        const res = await fetch(`${API_BASE}/logout/${INSTANCE}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Error al desconectar');
+        const data = await res.json();
+        alert(data?.response?.message || 'Sesión cerrada');
+        await fetchConnectionState();
+        qrImgEl.style.display = 'none';
+        codeEl.textContent = '-';
+        countEl.textContent = '0';
+      } catch (e) {
+        alert('No se pudo desconectar.');
+        console.error(e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const loadingScreen = document.getElementById('loadingScreen');
+      const errorScreen = document.getElementById('errorScreen');
+      const mainContent = document.getElementById('mainContent');
+
+      try {
+        if (!requireAuth(window.location.pathname)) {
+          loadingScreen.style.display = 'none';
+          errorScreen.style.display = 'flex';
+          return;
+        }
+
+        const currentUser = getCurrentUser();
+        const sidebarContainer = document.getElementById('sidebarContainer');
+        const sidebarElement = createSidebar({
+          user: currentUser,
+          activeItem: 'configuracion',
+          collapsible: true
+        });
+        sidebarContainer.appendChild(sidebarElement);
+
+        loadingScreen.style.display = 'none';
+        mainContent.style.display = 'block';
+
+        window.addEventListener('sidebarToggle', (e) => {
+          const mainArea = document.querySelector('.main-content');
+          if (!mainArea) return;
+          if (e.detail.collapsed) {
+            mainArea.classList.add('collapsed');
+          } else {
+            mainArea.classList.remove('collapsed');
+          }
+        });
+
+        document.getElementById('refreshStateBtn').addEventListener('click', fetchConnectionState);
+        document.getElementById('showQrBtn').addEventListener('click', fetchQr);
+        document.getElementById('logoutBtn').addEventListener('click', logoutInstance);
+
+        fetchConnectionState();
+      } catch (error) {
+        console.error('Error inicializando configuración:', error);
+        loadingScreen.style.display = 'none';
+        errorScreen.style.display = 'flex';
+      }
+    });
+  </script>
+</body>
+</html>
