@@ -506,7 +506,7 @@
               <th>numero de identificación</th>
               <th>tipo de identificación</th>
               <th>Correo Electrónico</th>
-              <th class="actions-col"><span class="visually-hidden">Acciones</span></th>
+              <th>Opciones</th>
             </tr>
           </thead>
           <tbody>
@@ -567,12 +567,8 @@
               <td>${paciente.numero_identificacion || 'N/A'}</td>
               <td>${paciente.tipo_documento || 'N/A'}</td>
               <td>${paciente.correo_electronico || 'N/A'}</td>
-              <td class="actions-cell">
-                <button class="btn-icon btn-eliminar" data-id="${paciente.id_paciente}" title="Eliminar" aria-label="Eliminar paciente ${paciente.nombre}">
-                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor">
-                    <path d="M9 3h6a1 1 0 011 1v1h4a1 1 0 110 2h-1v12a3 3 0 01-3 3H8a3 3 0 01-3-3V7H4a1 1 0 110-2h4V4a1 1 0 011-1zm1 3h4V4h-4v2zM7 7v12a1 1 0 001 1h8a1 1 0 001-1V7H7z"></path>
-                  </svg>
-                </button>
+              <td>
+                <button class="btn btn-danger btn-eliminar" data-id="${paciente.id_paciente}">Eliminar</button>
               </td>
             `;
             tablaPacientes.appendChild(fila);
@@ -783,9 +779,8 @@
       });
 
       tablaPacientes.addEventListener('click', async (e) => {
-        const btn = e.target.closest && e.target.closest('.btn-eliminar');
-        if (btn) {
-          const id_paciente = btn.getAttribute('data-id');
+        if (e.target.classList.contains('btn-eliminar')) {
+          const id_paciente = e.target.getAttribute('data-id');
           
           if (confirm('¿Está seguro de que desea eliminar este paciente?')) {
             try {
