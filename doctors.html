@@ -191,10 +191,6 @@
           <div class="stat-label">Total Doctoras</div>
         </div>
         <div class="stat-card">
-          <div class="stat-number" id="active-doctors">0</div>
-          <div class="stat-label">Doctoras Activas</div>
-        </div>
-        <div class="stat-card">
           <div class="stat-number" id="specialties-count">0</div>
           <div class="stat-label">Especialidades</div>
         </div>
@@ -295,7 +291,6 @@
 
       const updateStatistics = (doctoras) => {
         document.getElementById('total-doctors').textContent = doctoras.length;
-        document.getElementById('active-doctors').textContent = doctoras.length;
         document.getElementById('specialties-count').textContent = 1; // Por ahora solo tenemos un tipo de especialidad
       };
 
