@@ -19,23 +19,60 @@ export function createAppointmentForm(options = {}) {
   overlay.className = 'modal-overlay';
   const style = document.createElement('style');
   style.textContent = `
-    .af-form h3 { margin: 0 0 8px 0; color: #00a093; font-family: 'Inter', sans-serif; }
+    .af-form h3 { margin: 0 0 8px 0; color: var(--color-primary, #00a093); font-family: 'Inter', sans-serif; }
     .af-input-wrapper { position: relative; }
-    .af-field-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #00a093; }
-    .af-input { width: 100%; padding: 10px 12px 10px 34px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; transition: box-shadow .2s, border-color .2s; background: #fff; }
-    .af-input:focus { border-color: #00a093; box-shadow: 0 0 0 3px rgba(0,160,147,0.15); }
+    .af-field-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--color-primary, #00a093); }
+    .af-input { width: 100%; padding: 10px 12px 10px 34px; border: 1px solid var(--color-border, #cbd5e1); border-radius: 8px; outline: none; transition: box-shadow .2s, border-color .2s; background: var(--color-surface, #fff); color: var(--color-text-primary, #0f172a); }
+    .af-input:focus { border-color: var(--color-primary, #00a093); box-shadow: 0 0 0 3px rgba(0,160,147,0.15); }
     .af-textarea { min-height: 90px; resize: vertical; }
-    .af-select { appearance: none; background: #fff; }
-    .af-help { display: block; font-size: 12px; color: #64748b; margin-top: 6px; }
-    .af-error { margin-top: 6px; color: #c0392b; font-size: 12px; font-weight: 600; }
+    .af-select { appearance: none; background: var(--color-surface, #fff); color: var(--color-text-primary, #0f172a); }
+    .af-help { display: block; font-size: 12px; color: var(--color-text-secondary, #64748b); margin-top: 6px; }
+    .af-error { margin-top: 6px; color: var(--color-error, #c0392b); font-size: 12px; font-weight: 600; }
     .af-actions .btn { padding: 10px 14px; border-radius: 8px; }
-    .af-actions .btn-primary { background: linear-gradient(135deg, #00bfae, #00a093); color: #fff; border: 1px solid #00a093; }
-    .af-actions .btn-primary:hover { background: linear-gradient(135deg, #00a093, #00867a); }
-    .af-actions .btn-secondary { background: #eef2f7; color: #0f172a; border: 1px solid #cbd5e1; }
-    .modal-content { border-radius: 12px; box-shadow: 0 16px 40px rgba(0,0,0,0.25); }
+    .af-actions .btn-primary { background: linear-gradient(135deg, var(--color-primary, #00bfae), var(--color-primary-hover, #00a093)); color: var(--color-text-inverse, #fff); border: 1px solid var(--color-primary, #00a093); }
+    .af-actions .btn-primary:hover { background: linear-gradient(135deg, var(--color-primary-hover, #00a093), var(--color-primary, #00867a)); }
+    .af-actions .btn-secondary { background: var(--color-background-secondary, #eef2f7); color: var(--color-text-primary, #0f172a); border: 1px solid var(--color-border, #cbd5e1); }
+    .af-actions .btn-secondary:hover { background: var(--color-background-tertiary, #e2e8f0); }
+    .modal-content { border-radius: 12px; box-shadow: 0 16px 40px var(--color-shadow, rgba(0,0,0,0.25)); background: var(--color-surface, #fff); }
     .modal-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-    .modal-item { border: 1px solid #eef2f7; }
-    .modal-label { display: flex; align-items: center; gap: 8px; }
+    .modal-item { border: 1px solid var(--color-border, #eef2f7); }
+    .modal-label { display: flex; align-items: center; gap: 8px; color: var(--color-text-primary, #0f172a); }
+    
+    /* Estilos específicos para tema oscuro */
+    [data-theme="dark"] .af-input { background: var(--color-surface, #1f2937); color: var(--color-text-primary, #f9fafb); border-color: var(--color-border, #374151); }
+    [data-theme="dark"] .af-input:focus { border-color: var(--color-primary, #3b82f6); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+    [data-theme="dark"] .af-select { background: var(--color-surface, #1f2937); color: var(--color-text-primary, #f9fafb); border-color: var(--color-border, #374151); }
+    [data-theme="dark"] .af-textarea { background: var(--color-surface, #1f2937); color: var(--color-text-primary, #1f2937); border-color: var(--color-border, #374151); }
+    [data-theme="dark"] .modal-content { background: var(--color-surface, #1f2937); }
+    [data-theme="dark"] .modal-label { color: var(--color-text-primary, #f9fafb); }
+    [data-theme="dark"] .af-help { color: var(--color-text-secondary, #9ca3af); }
+    [data-theme="dark"] .af-field-icon { color: var(--color-text-secondary, #9ca3af); }
+    [data-theme="dark"] .modal-item { border-color: var(--color-border, #374151); }
+    [data-theme="dark"] .af-actions .btn-secondary { background: var(--color-background-tertiary, #374151); color: var(--color-text-primary, #f9fafb); border-color: var(--color-border, #4b5563); }
+    [data-theme="dark"] .af-actions .btn-secondary:hover { background: var(--color-border, #4b5563); }
+    [data-theme="dark"] .af-actions .btn-primary { background: linear-gradient(135deg, var(--color-primary, #3b82f6), var(--color-primary-hover, #2563eb)); border-color: var(--color-primary, #3b82f6); }
+    [data-theme="dark"] .af-actions .btn-primary:hover { background: linear-gradient(135deg, var(--color-primary-hover, #2563eb), var(--color-primary, #1d4ed8)); }
+    [data-theme="dark"] .modal-overlay { background: rgba(0, 0, 0, 0.8); }
+    [data-theme="dark"] .modal-close { color: var(--color-text-secondary, #9ca3af); }
+    [data-theme="dark"] .modal-close:hover { color: var(--color-text-primary, #f9fafb); }
+    [data-theme="dark"] .af-error { color: var(--color-error, #f87171); }
+    [data-theme="dark"] #appointmentStatus { color: var(--color-error, #f87171); }
+    
+    /* Mejoras de accesibilidad y contraste */
+    .af-input:disabled { background: var(--color-disabled-background, #f3f4f6); color: var(--color-disabled, #9ca3af); }
+    .af-select:disabled { background: var(--color-disabled-background, #f3f4f6); color: var(--color-disabled, #9ca3af); }
+    .af-textarea:disabled { background: var(--color-disabled-background, #f3f4f6); color: var(--color-disabled, #9ca3af); }
+    
+    [data-theme="dark"] .af-input:disabled { background: var(--color-disabled-background, #374151); color: var(--color-disabled, #6b7280); }
+    [data-theme="dark"] .af-select:disabled { background: var(--color-disabled-background, #374151); color: var(--color-disabled, #6b7280); }
+    [data-theme="dark"] .af-textarea:disabled { background: var(--color-disabled-background, #374151); color: var(--color-disabled, #6b7280); }
+    
+    /* Placeholder styling */
+    .af-input::placeholder { color: var(--color-text-tertiary, #9ca3af); }
+    .af-textarea::placeholder { color: var(--color-text-tertiary, #9ca3af); }
+    
+    [data-theme="dark"] .af-input::placeholder { color: var(--color-text-tertiary, #6b7280); }
+    [data-theme="dark"] .af-textarea::placeholder { color: var(--color-text-tertiary, #6b7280); }
   `;
   overlay.appendChild(style);
   const modal = document.createElement('div');
@@ -43,6 +80,7 @@ export function createAppointmentForm(options = {}) {
   const closeBtn = document.createElement('button');
   closeBtn.className = 'modal-close';
   closeBtn.textContent = '×';
+  closeBtn.style.cssText = 'background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; line-height: 1; color: var(--color-text-secondary, #9ca3af);';
   const title = document.createElement('h3');
   title.textContent = 'Crear nueva cita';
   const form = document.createElement('form');
@@ -53,7 +91,7 @@ export function createAppointmentForm(options = {}) {
   const status = document.createElement('div');
   status.id = 'appointmentStatus';
   status.style.marginTop = '8px';
-  status.style.color = '#c0392b';
+  status.style.color = 'var(--color-error, #c0392b)';
   const actions = document.createElement('div');
   actions.style.display = 'flex';
   actions.style.justifyContent = 'flex-end';
@@ -390,7 +428,7 @@ export function createAppointmentForm(options = {}) {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    status.style.color = '#c0392b';
+    status.style.color = 'var(--color-error, #c0392b)';
     status.textContent = '';
     const fechaVal = fechaInput.value;
     const motivoVal = motivoInput.value.trim();
