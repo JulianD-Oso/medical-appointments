@@ -111,7 +111,7 @@ export function createSidebar(options = {}) {
         <div class="sidebar-header">
             <div class="logo-container">
                 <img src="logo-maxident.PNG" alt="Maxi Dent" class="sidebar-logo">
-                <span class="logo-text">Maxi Dent</span>
+                <span class="logo-text">MaxiDent</span>
             </div>
             ${collapsible ? `<button class="sidebar-toggle" id="sidebar-toggle">${getMenuIcon()}</button>` : ''}
         </div>
