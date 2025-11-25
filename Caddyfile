@@ -16,5 +16,5 @@
 
     # Redirige todas las solicitudes no encontradas a index.html
     # Esto es esencial para que el enrutamiento del lado del cliente en las SPAs funcione
-    try_files {path} /login.html
+    try_files {path} /index.html
 }
