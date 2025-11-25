@@ -113,8 +113,6 @@
 
     const stateEl = document.getElementById('waState');
     const qrImgEl = document.getElementById('waQrImage');
-    const codeEl = document.getElementById('waCode');
-    const countEl = document.getElementById('waCount');
 
     async function fetchConnectionState() {
       try {
@@ -147,8 +145,6 @@
         const code = data?.code || null;
         const count = data?.count || 0;
 
-        countEl.textContent = String(count);
-        codeEl.textContent = code ? code : '-';
 
         if (base64) {
           qrImgEl.src = base64;
@@ -158,7 +154,6 @@
         }
       } catch (e) {
         qrImgEl.style.display = 'none';
-        codeEl.textContent = 'error';
         console.error(e);
       }
     }
@@ -173,8 +168,6 @@
         alert(data?.response?.message || 'Sesión cerrada');
         await fetchConnectionState();
         qrImgEl.style.display = 'none';
-        codeEl.textContent = '-';
-        countEl.textContent = '0';
       } catch (e) {
         alert('No se pudo desconectar.');
         console.error(e);
