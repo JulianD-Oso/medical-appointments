@@ -667,12 +667,13 @@
           populateDocumentTypes(fallback);
         }
       };
-
+/*
       // --- Validaciones en tiempo real y utilidades ---
       const setError = (input, errorEl, message) => {
         input.setAttribute('aria-invalid', message ? 'true' : 'false');
         if (errorEl) errorEl.textContent = message || '';
       };
+      */
 
       const validateNombre = (v) => {
         const value = v.trim();
@@ -715,11 +716,14 @@
         const idErr = validateIdentificacion(numeroIdentificacionInput.value);
         const tipoErr = validateTipoDocumento(tipoDocumentoSelect.value);
 
+
+        /*
         setError(nombreInput, document.getElementById('nombreError'), nombreErr);
         setError(telefonoInput, document.getElementById('telefonoError'), telErr);
         setError(correoInput, document.getElementById('correoError'), emailErr);
         setError(numeroIdentificacionInput, document.getElementById('identificacionError'), idErr);
         setError(tipoDocumentoSelect, document.getElementById('tipoDocumentoError'), tipoErr);
+        */
 
         const allValid = !nombreErr && !telErr && !emailErr && !idErr && !tipoErr;
         submitButton.disabled = !allValid;
