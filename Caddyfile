@@ -1,0 +1,20 @@
+{
+    # Activa el modo de depuración para ver más detalles en los logs (opcional)
+    debug
+}
+
+# Configura el sitio para que escuche en el puerto 3000
+:3000 {
+    # Establece la raíz del sitio en /srv (el directorio de trabajo en el Dockerfile)
+    root * /srv
+
+    # Habilita la compresión gzip para mejorar el rendimiento
+    encode gzip
+
+    # Sirve los archivos estáticos
+    file_server
+
+    # Redirige todas las solicitudes no encontradas a index.html
+    # Esto es esencial para que el enrutamiento del lado del cliente en las SPAs funcione
+    try_files {path} /login.html
+}
