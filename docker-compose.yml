@@ -5,3 +5,21 @@ services:
     image: medical-appointments-web:1.0.0
     container_name: medical-appointments-web
     restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.medical-appointments-web.rule=Host(`medical-appointments.srv1065547.hstgr.cloud`)
+      - traefik.http.routers.medical-appointments-web.tls=true
+      - traefik.http.routers.medical-appointments-web.entrypoints=web,websecure
+      - traefik.http.routers.medical-appointments-web.tls.certresolver=mytlschallenge
+      - traefik.http.services.medical-appointments-web.loadbalancer.server.port=3000
+      - traefik.http.middlewares.medical-appointments-web.headers.SSLRedirect=true
+      - traefik.http.middlewares.medical-appointments-web.headers.STSSeconds=315360000
+      - traefik.http.middlewares.medical-appointments-web.headers.browserXSSFilter=true
+      - traefik.http.middlewares.medical-appointments-web.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.medical-appointments-web.headers.forceSTSHeader=true
+      - traefik.http.middlewares.medical-appointments-web.headers.SSLHost=medical-appointments.srv1065547.hstgr.cloud
+      - traefik.http.middlewares.medical-appointments-web.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.medical-appointments-web.headers.STSPreload=true
+      - traefik.http.routers.medical-appointments-web.middlewares=medical-appointments-web@docker
+    networks:
+      - n8n_evoapi
