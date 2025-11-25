@@ -23,3 +23,7 @@ services:
       - traefik.http.routers.medical-appointments-web.middlewares=medical-appointments-web@docker
     networks:
       - n8n_evoapi
+
+networks:
+  n8n_evoapi:
+    external: true
