@@ -10,11 +10,9 @@ services:
       - traefik.enable=true
       - traefik.http.routers.medical-appointments-web.rule=Host(`medical-appointments.srv1065547.hstgr.cloud`)
       - traefik.http.routers.medical-appointments-web.tls=true
-      - traefik.http.routers.medical-appointments-web.entrypoints=websecure
+      - traefik.http.routers.medical-appointments-web.entrypoints=web,websecure
       - traefik.http.routers.medical-appointments-web.tls.certresolver=mytlschallenge
       - traefik.http.services.medical-appointments-web.loadbalancer.server.port=3000
-      
-      # Middleware de seguridad
       - traefik.http.middlewares.medical-appointments-web.headers.SSLRedirect=true
       - traefik.http.middlewares.medical-appointments-web.headers.STSSeconds=315360000
       - traefik.http.middlewares.medical-appointments-web.headers.browserXSSFilter=true
@@ -23,18 +21,7 @@ services:
       - traefik.http.middlewares.medical-appointments-web.headers.SSLHost=srv1065547.hstgr.cloud
       - traefik.http.middlewares.medical-appointments-web.headers.STSIncludeSubdomains=true
       - traefik.http.middlewares.medical-appointments-web.headers.STSPreload=true
-      - traefik.http.middlewares.medical-appointments-web.headers.customFrameOptionsValue=SAMEORIGIN
-      - traefik.http.middlewares.medical-appointments-web.headers.customResponseHeaders.X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
-      
-      # Aplicar middlewares
       - traefik.http.routers.medical-appointments-web.middlewares=medical-appointments-web@docker
-      
-      # Router HTTP para redirección
-      - traefik.http.routers.medical-appointments-web-http.rule=Host(`medical-appointments.srv1065547.hstgr.cloud`)
-      - traefik.http.routers.medical-appointments-web-http.entrypoints=web
-      - traefik.http.routers.medical-appointments-web-http.middlewares=https-redirect
-      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
-      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
     networks:
       - n8n_evoapi
 
