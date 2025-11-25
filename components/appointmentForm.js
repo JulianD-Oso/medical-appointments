@@ -22,7 +22,7 @@ export function createAppointmentForm(options = {}) {
     .af-form h3 { margin: 0 0 8px 0; color: var(--color-primary, #00a093); font-family: 'Inter', sans-serif; }
     .af-input-wrapper { position: relative; }
     .af-field-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--color-primary, #00a093); }
-    .af-input { width: 100%; padding: 10px 12px 10px 34px; border: 1px solid var(--color-border, #cbd5e1); border-radius: 8px; outline: none; transition: box-shadow .2s, border-color .2s; background: var(--color-surface, #fff); color: var(--color-text-primary, #0f172a); }
+    .af-input { width: 100%; padding: 10px 12px 10px 34px; border: 1px solid var(--color-border, #0f172a); border-radius: 8px; outline: none; transition: box-shadow .2s, border-color .2s; background: var(--color-surface, #fff); color: var(--color-text-primary, #0f172a); }
     .af-input:focus { border-color: var(--color-primary, #00a093); box-shadow: 0 0 0 3px rgba(0,160,147,0.15); }
     .af-textarea { min-height: 90px; resize: vertical; }
     .af-select { appearance: none; background: var(--color-surface, #fff); color: var(--color-text-primary, #0f172a); }
@@ -39,22 +39,22 @@ export function createAppointmentForm(options = {}) {
     .modal-label { display: flex; align-items: center; gap: 8px; color: var(--color-text-primary, #0f172a); }
     
     /* Estilos específicos para tema oscuro */
-    [data-theme="dark"] .af-input { background: var(--color-surface, #1f2937); color: var(--color-text-primary, #f9fafb); border-color: var(--color-border, #374151); }
+    [data-theme="dark"] .af-input { background: var(--color-surface, #1f2937); color: var(--color-text-primary, #1f2937); border-color: var(--color-border, #374151); }
     [data-theme="dark"] .af-input:focus { border-color: var(--color-primary, #3b82f6); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
-    [data-theme="dark"] .af-select { background: var(--color-surface, #1f2937); color: var(--color-text-primary, #f9fafb); border-color: var(--color-border, #374151); }
+    [data-theme="dark"] .af-select { background: var(--color-surface, #1f2937); color: var(--color-text-primary, #1f2937); border-color: var(--color-border, #374151); }
     [data-theme="dark"] .af-textarea { background: var(--color-surface, #1f2937); color: var(--color-text-primary, #1f2937); border-color: var(--color-border, #374151); }
     [data-theme="dark"] .modal-content { background: var(--color-surface, #1f2937); }
-    [data-theme="dark"] .modal-label { color: var(--color-text-primary, #f9fafb); }
-    [data-theme="dark"] .af-help { color: var(--color-text-secondary, #9ca3af); }
-    [data-theme="dark"] .af-field-icon { color: var(--color-text-secondary, #9ca3af); }
+    [data-theme="dark"] .modal-label { color: var(--color-text-primary, #1f2937); }
+    [data-theme="dark"] .af-help { color: var(--color-text-secondary, #1f2937); }
+    [data-theme="dark"] .af-field-icon { color: var(--color-text-secondary, #1f2937); }
     [data-theme="dark"] .modal-item { border-color: var(--color-border, #374151); }
     [data-theme="dark"] .af-actions .btn-secondary { background: var(--color-background-tertiary, #374151); color: var(--color-text-primary, #f9fafb); border-color: var(--color-border, #4b5563); }
     [data-theme="dark"] .af-actions .btn-secondary:hover { background: var(--color-border, #4b5563); }
     [data-theme="dark"] .af-actions .btn-primary { background: linear-gradient(135deg, var(--color-primary, #3b82f6), var(--color-primary-hover, #2563eb)); border-color: var(--color-primary, #3b82f6); }
     [data-theme="dark"] .af-actions .btn-primary:hover { background: linear-gradient(135deg, var(--color-primary-hover, #2563eb), var(--color-primary, #1d4ed8)); }
     [data-theme="dark"] .modal-overlay { background: rgba(0, 0, 0, 0.8); }
-    [data-theme="dark"] .modal-close { color: var(--color-text-secondary, #9ca3af); }
-    [data-theme="dark"] .modal-close:hover { color: var(--color-text-primary, #f9fafb); }
+    [data-theme="dark"] .modal-close { color: var(--color-text-secondary, #1f2937); }
+    [data-theme="dark"] .modal-close:hover { color: var(--color-text-primary, #1f2937); }
     [data-theme="dark"] .af-error { color: var(--color-error, #f87171); }
     [data-theme="dark"] #appointmentStatus { color: var(--color-error, #f87171); }
     
@@ -68,11 +68,11 @@ export function createAppointmentForm(options = {}) {
     [data-theme="dark"] .af-textarea:disabled { background: var(--color-disabled-background, #374151); color: var(--color-disabled, #6b7280); }
     
     /* Placeholder styling */
-    .af-input::placeholder { color: var(--color-text-tertiary, #9ca3af); }
-    .af-textarea::placeholder { color: var(--color-text-tertiary, #9ca3af); }
+    .af-input::placeholder { color: var(--color-text-tertiary, #1f2937); }
+    .af-textarea::placeholder { color: var(--color-text-tertiary, #1f2937); }
     
-    [data-theme="dark"] .af-input::placeholder { color: var(--color-text-tertiary, #6b7280); }
-    [data-theme="dark"] .af-textarea::placeholder { color: var(--color-text-tertiary, #6b7280); }
+    [data-theme="dark"] .af-input::placeholder { color: var(--color-text-tertiary, #1f2937); }
+    [data-theme="dark"] .af-textarea::placeholder { color: var(--color-text-tertiary, #1f2937); }
   `;
   overlay.appendChild(style);
   const modal = document.createElement('div');
