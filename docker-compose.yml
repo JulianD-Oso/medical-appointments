@@ -12,7 +12,7 @@ services:
       - traefik.http.routers.medical-appointments-web.tls=true
       - traefik.http.routers.medical-appointments-web.entrypoints=web,websecure
       - traefik.http.routers.medical-appointments-web.tls.certresolver=mytlschallenge
-      - traefik.http.services.medical-appointments-web.loadbalancer.server.port=3000
+      - traefik.http.services.medical-appointments-web.loadbalancer.server.port=8000
       - traefik.http.middlewares.medical-appointments-web.headers.SSLRedirect=true
       - traefik.http.middlewares.medical-appointments-web.headers.STSSeconds=315360000
       - traefik.http.middlewares.medical-appointments-web.headers.browserXSSFilter=true
