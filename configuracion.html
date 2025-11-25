@@ -22,30 +22,59 @@
           ensureThemeInitialized();
       });
   </script>
-  <style>
-    body {
-      background: var(--color-background, #e0fdfa);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      min-height: 100vh;
-      color: var(--color-text-primary, #333333);
-      transition: background-color var(--theme-transition-duration, 200ms) ease,
-                  color var(--theme-transition-duration, 200ms) ease;
-    }
-    .page-header { margin-bottom: 20px; }
-    .wa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .wa-card { background: var(--color-surface, #ffffff); border: 1px solid var(--color-border, #ddd); border-radius: var(--radius-lg, 8px); padding: 20px; }
-    .wa-status { font-weight: 600; }
-    .wa-status.ok { color: #2ecc71; }
-    .wa-status.close { color: #e74c3c; }
-    .wa-qr { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-    .wa-qr img { max-width: 240px; border: 1px solid var(--color-border, #ddd); border-radius: 8px; }
-    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn { padding: 10px 14px; border-radius: 8px; cursor: pointer; border: 1px solid var(--color-border, #cbd5e1); background: var(--color-surface, #fff); }
-    .btn-primary { background: var(--color-primary, #00bfae); color: var(--color-text-inverse, #fff); border-color: var(--color-primary, #00bfae); }
-    .btn-danger { background: var(--color-error, #e74c3c); color: var(--color-text-inverse, #fff); border-color: var(--color-error, #e74c3c); }
-  </style>
+    <style>
+      body {
+        background: var(--color-background, #f7fafc);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        min-height: 100vh;
+        color: var(--color-text-primary, #2d3748);
+        transition: background-color var(--theme-transition-duration, 200ms) ease,
+                    color var(--theme-transition-duration, 200ms) ease;
+        font-family: 'Inter', sans-serif;
+      }
+      .page-header { margin-bottom: 30px; }
+      .page-header h1 { font-size: 28px; font-weight: 600; color: var(--color-text-primary); }
+      .page-header p { font-size: 16px; color: var(--color-text-secondary); }
+      .wa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+      .wa-card {
+        background: var(--color-surface, #ffffff);
+        border: 1px solid var(--color-border, #e2e8f0);
+        border-radius: var(--radius-xl, 12px);
+        padding: 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: box-shadow 0.2s ease;
+      }
+      .wa-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+      .wa-card h3 { font-size: 18px; font-weight: 600; margin-top: 0; margin-bottom: 8px; }
+      .wa-status { font-weight: 600; font-size: 16px; }
+      .wa-status.ok { color: var(--color-success, #38a169); }
+      .wa-status.close { color: var(--color-error, #e53e3e); }
+      .wa-qr { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      .wa-qr img { max-width: 220px; border: 1px solid var(--color-border, #e2e8f0); border-radius: 12px; }
+      .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+      .btn {
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 1px solid var(--color-border, #cbd5e1);
+        background: var(--color-surface, #fff);
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+      .btn:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+      .btn-primary {
+        background: var(--color-primary, #00bfae);
+        color: var(--color-text-inverse, #fff);
+        border-color: var(--color-primary, #00bfae);
+      }
+      .btn-danger {
+        background: var(--color-error, #e53e3e);
+        color: var(--color-text-inverse, #fff);
+        border-color: var(--color-error, #e53e3e);
+      }
+    </style>
 </head>
 <body>
   <div class="loading-screen" id="loadingScreen">
@@ -113,6 +142,7 @@
 
     const stateEl = document.getElementById('waState');
     const qrImgEl = document.getElementById('waQrImage');
+    const showQrBtn = document.getElementById('showQrBtn');
 
     async function fetchConnectionState() {
       try {
@@ -122,10 +152,18 @@
         if (!res.ok) throw new Error('Error obteniendo estado');
         const data = await res.json();
         const state = data?.instance?.state || 'desconocido';
-        stateEl.textContent = state;
-        stateEl.classList.remove('ok', 'close');
-        if (state === 'open') stateEl.classList.add('ok');
-        if (state === 'close') stateEl.classList.add('close');
+        if (state === 'open') {
+          stateEl.textContent = 'Conectado';
+          stateEl.classList.add('ok');
+          stateEl.classList.remove('close');
+          showQrBtn.style.display = 'none';
+          qrImgEl.style.display = 'none';
+        } else {
+          stateEl.textContent = 'Desconectado';
+          stateEl.classList.add('close');
+          stateEl.classList.remove('ok');
+          showQrBtn.style.display = 'block';
+        }
       } catch (e) {
         stateEl.textContent = 'error';
         stateEl.classList.remove('ok');
@@ -159,6 +197,9 @@
     }
 
     async function logoutInstance() {
+      if (!confirm('¿Está seguro de que desea desconectar la sesión de WhatsApp?')) {
+        return;
+      }
       try {
         const res = await fetch(`${API_BASE}/logout/${INSTANCE}`, {
           headers: { apikey: '123456.+az1' },
@@ -213,6 +254,7 @@
         document.getElementById('logoutBtn').addEventListener('click', logoutInstance);
 
         fetchConnectionState();
+        setInterval(fetchConnectionState, 10000); // Refrescar cada 10 segundos
       } catch (error) {
         console.error('Error inicializando configuración:', error);
         loadingScreen.style.display = 'none';
