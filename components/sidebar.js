@@ -152,17 +152,7 @@ export function createSidebar(options = {}) {
 
 
 
-                    <li class="nav-item ${activeItem === 'reportes' ? 'active' : ''}">
 
-                        <a href="reportes.html" class="nav-link" data-tooltip="Reportes">
-                            
-                            <span class="nav-icon">${getReportsIcon()}</span>
-                            
-                            <span class="nav-text">Reportes</span>
-                        
-                        </a>
-                        
-                    </li>
                     <li class="nav-item ${activeItem === 'configuracion' ? 'active' : ''}">
                         <a href="configuracion.html" class="nav-link" data-tooltip="Configuración">
                             <span class="nav-icon">${getConfigurationIcon()}</span>
