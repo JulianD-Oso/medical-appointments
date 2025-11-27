@@ -100,12 +100,12 @@ function getMenuIcon(color = 'currentColor') {
  */
 export function createSidebar(options = {}) {
     const { user, activeItem = 'home', collapsible = true } = options;
-    
+
     // Create sidebar container
     const sidebar = document.createElement('aside');
     sidebar.className = 'sidebar';
     sidebar.id = 'main-sidebar';
-    
+
     // Create sidebar HTML structure
     sidebar.innerHTML = `
         <div class="sidebar-header">
@@ -150,7 +150,7 @@ export function createSidebar(options = {}) {
                         </a>
                     </li>
                     <li class="nav-item ${activeItem === 'reportes' ? 'active' : ''}">
-                        <a href="coming-soon.html" class="nav-link" data-tooltip="Reportes">
+                        <a href="reportes.html" class="nav-link" data-tooltip="Reportes">
                             <span class="nav-icon">${getReportsIcon()}</span>
                             <span class="nav-text">Reportes</span>
                         </a>
@@ -178,15 +178,15 @@ export function createSidebar(options = {}) {
             </button>
         </div>
     `;
-    
+
     // Setup event listeners
     setupEventListeners(sidebar, collapsible);
-    
+
     // Initialize icon colors after a short delay to ensure theme is applied
     setTimeout(() => {
         updateSidebarIconColors();
     }, 150);
-    
+
     return sidebar;
 }
 
@@ -202,7 +202,7 @@ function setupEventListeners(sidebar, collapsible) {
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('collapsed');
-                
+
                 // Save collapsed state to localStorage
                 const isCollapsed = sidebar.classList.contains('collapsed');
                 localStorage.setItem('sidebar_collapsed', isCollapsed);
@@ -214,7 +214,7 @@ function setupEventListeners(sidebar, collapsible) {
             });
         }
     }
-    
+
     // Handle navigation clicks
     const navLinks = sidebar.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
@@ -224,13 +224,13 @@ function setupEventListeners(sidebar, collapsible) {
                 e.preventDefault();
                 return;
             }
-            
+
             // Update active state
             navLinks.forEach(l => l.parentElement.classList.remove('active'));
             link.parentElement.classList.add('active');
         });
     });
-    
+
     // Handle logout button
     const logoutBtn = sidebar.querySelector('#sidebar-logout');
     if (logoutBtn) {
@@ -239,14 +239,14 @@ function setupEventListeners(sidebar, collapsible) {
             handleLogout();
         });
     }
-    
+
     // Handle theme toggle button
     const themeToggleBtn = sidebar.querySelector('#theme-toggle-btn');
     if (themeToggleBtn) {
         updateThemeToggleButton(themeToggleBtn);
         // Actualizar colores iniciales de los íconos
         setTimeout(() => updateSidebarIconColors(), 100);
-        
+
         themeToggleBtn.addEventListener('click', (e) => {
             e.preventDefault();
             import('../utils/theme.js').then(module => {
@@ -256,14 +256,14 @@ function setupEventListeners(sidebar, collapsible) {
                 console.error('Error al cambiar tema:', error);
             });
         });
-        
+
         // Listen for theme changes
         window.addEventListener('themechange', () => {
             updateThemeToggleButton(themeToggleBtn);
             updateSidebarIconColors();
         });
     }
-    
+
     // Restore collapsed state
     if (collapsible) {
         const savedCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
@@ -301,7 +301,7 @@ function handleLogout() {
  */
 function getInitials(username) {
     if (!username) return 'U';
-    
+
     const parts = username.split(' ');
     if (parts.length >= 2) {
         return parts[0][0].toUpperCase() + parts[1][0].toUpperCase();
@@ -321,7 +321,7 @@ function getRoleDisplay(role) {
         'assistant': 'Asistente',
         'receptionist': 'Recepcionista'
     };
-    
+
     return roleMap[role] || role || 'Usuario';
 }
 
@@ -332,11 +332,11 @@ function getRoleDisplay(role) {
  */
 export function updateSidebarActiveItem(sidebar, activeItem) {
     if (!sidebar) return;
-    
+
     const navItems = sidebar.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.classList.remove('active');
-        
+
         const link = item.querySelector('.nav-link');
         if (link && link.href.includes(activeItem)) {
             item.classList.add('active');
@@ -351,19 +351,19 @@ export function updateSidebarActiveItem(sidebar, activeItem) {
  */
 export function refreshSidebarUser(sidebar, user) {
     if (!sidebar || !user) return;
-    
+
     const userNameElement = sidebar.querySelector('.user-name');
     const userRoleElement = sidebar.querySelector('.user-role');
     const userAvatarElement = sidebar.querySelector('.avatar-text');
-    
+
     if (userNameElement) {
         userNameElement.textContent = user.username || 'Usuario';
     }
-    
+
     if (userRoleElement) {
         userRoleElement.textContent = getRoleDisplay(user.role) || 'Usuario';
     }
-    
+
     if (userAvatarElement) {
         userAvatarElement.textContent = getInitials(user.username || 'Usuario');
     }
@@ -378,13 +378,13 @@ function updateThemeToggleButton(button) {
         const isDark = module.isDark();
         const lightIcon = button.querySelector('.theme-light');
         const darkIcon = button.querySelector('.theme-dark');
-        
+
         if (lightIcon && darkIcon) {
             lightIcon.style.display = isDark ? 'none' : 'inline';
             darkIcon.style.display = isDark ? 'inline' : 'none';
             button.setAttribute('title', isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
         }
-        
+
         // Actualizar colores de los íconos SVG en el sidebar
         updateSidebarIconColors();
     }).catch(error => {
@@ -400,21 +400,21 @@ function updateSidebarIconColors() {
         const isDark = module.isDark();
         const sidebar = document.getElementById('main-sidebar');
         if (!sidebar) return;
-        
+
         const navLinks = sidebar.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             const iconSvg = link.querySelector('.nav-icon-svg');
             if (iconSvg) {
                 const isActive = link.parentElement.classList.contains('active');
-                const color = isActive ? 
+                const color = isActive ?
                     getComputedStyle(document.documentElement).getPropertyValue('--color-sidebar-text-active').trim() || '#ffffff' :
                     getComputedStyle(document.documentElement).getPropertyValue('--color-sidebar-text').trim() || '#ecf0f1';
-                
+
                 iconSvg.style.fill = color;
                 iconSvg.style.stroke = color;
             }
         });
-        
+
         // Actualizar íconos del botón de tema
         const themeButton = sidebar.querySelector('#theme-toggle-btn');
         if (themeButton) {
@@ -424,26 +424,26 @@ function updateSidebarIconColors() {
                 icon.style.stroke = color;
             });
         }
-        
+
         // Actualizar ícono de logout
-         const logoutButton = sidebar.querySelector('#sidebar-logout');
-         if (logoutButton) {
-             const logoutIcon = logoutButton.querySelector('.nav-icon-svg');
-             if (logoutIcon) {
-                 const color = getComputedStyle(document.documentElement).getPropertyValue('--color-error').trim() || '#e74c3c';
-                 logoutIcon.style.stroke = color;
-             }
-         }
-         
-         // Actualizar ícono del botón de menú
-         const menuButton = sidebar.querySelector('#sidebar-toggle');
-         if (menuButton) {
-             const menuIcon = menuButton.querySelector('.sidebar-toggle-svg');
-             if (menuIcon) {
-                 const color = getComputedStyle(document.documentElement).getPropertyValue('--color-sidebar-text').trim() || '#ecf0f1';
-                 menuIcon.style.stroke = color;
-             }
-         }
+        const logoutButton = sidebar.querySelector('#sidebar-logout');
+        if (logoutButton) {
+            const logoutIcon = logoutButton.querySelector('.nav-icon-svg');
+            if (logoutIcon) {
+                const color = getComputedStyle(document.documentElement).getPropertyValue('--color-error').trim() || '#e74c3c';
+                logoutIcon.style.stroke = color;
+            }
+        }
+
+        // Actualizar ícono del botón de menú
+        const menuButton = sidebar.querySelector('#sidebar-toggle');
+        if (menuButton) {
+            const menuIcon = menuButton.querySelector('.sidebar-toggle-svg');
+            if (menuIcon) {
+                const color = getComputedStyle(document.documentElement).getPropertyValue('--color-sidebar-text').trim() || '#ecf0f1';
+                menuIcon.style.stroke = color;
+            }
+        }
     }).catch(error => {
         console.error('Error al actualizar colores de íconos:', error);
     });

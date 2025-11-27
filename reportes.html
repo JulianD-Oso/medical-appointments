@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes - Clínica Maxi Dent</title>
+
+    <!-- Preconnect para Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts - Inter y Poppins -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/common-pages.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Inicializar sistema de temas -->
+    <script type="module">
+        import { initTheme } from './utils/theme.js';
+        initTheme();
+    </script>
+    <style>
+        body {
+            background: var(--color-background, #ffffff);
+            margin: 0;
+            font-family: var(--font-family-primary, 'Inter', system-ui, sans-serif);
+            color: var(--color-text-primary, #333333);
+            transition: background-color var(--theme-transition-duration, 200ms) ease,
+                color var(--theme-transition-duration, 200ms) ease;
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+        }
+
+        html[data-theme="light"] {
+            color-scheme: light;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            color: var(--color-primary, #00bfae);
+            margin: 0 0 8px 0;
+            font-family: var(--font-family-secondary, 'Poppins', sans-serif);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .control {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control label {
+            font-weight: 600;
+            color: var(--color-text-primary, #005d56);
+            font-size: 14px;
+        }
+
+        .control input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--color-border, #cccccc);
+            outline: none;
+            background-color: var(--color-surface, #ffffff);
+            color: var(--color-text-primary, #333333);
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .control input:focus {
+            border-color: var(--color-primary, #00bfae);
+            box-shadow: 0 0 0 3px rgba(0, 191, 174, 0.1);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 16px 0 32px 0;
+            justify-content: flex-end;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: var(--color-surface, #ffffff);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.08));
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 1px solid var(--color-border, #eee);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover, 0 8px 24px rgba(0, 0, 0, 0.12));
+        }
+
+        .kpi-title {
+            font-size: 13px;
+            color: var(--color-text-secondary, #666);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-primary, #00bfae);
+            line-height: 1.2;
+        }
+
+        .kpi-trend {
+            font-size: 12px;
+            margin-top: 8px;
+            color: var(--color-text-tertiary, #888);
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-container {
+            background: var(--color-surface, #ffffff);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.08));
+            border: 1px solid var(--color-border, #eee);
+            min-height: 350px;
+            position: relative;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text-primary, #333);
+            margin-bottom: 20px;
+            font-family: var(--font-family-secondary, 'Poppins', sans-serif);
+        }
+
+        .chart-canvas-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Tabs for Tables */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--color-border, #ddd);
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--color-text-secondary, #666);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn:hover {
+            color: var(--color-primary, #00bfae);
+            background: var(--color-background-secondary, #f9fafb);
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary, #00bfae);
+            border-bottom-color: var(--color-primary, #00bfae);
+            font-weight: 600;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.08));
+            background: var(--color-surface, #fff);
+            display: none;
+            /* Hidden by default */
+            border: 1px solid var(--color-border, #eee);
+        }
+
+        .table-container.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border, #eee);
+        }
+
+        th {
+            background-color: var(--color-background-secondary, #f9fafb);
+            color: var(--color-text-secondary, #555);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: var(--color-surface-hover, #f9fafb);
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .badge.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge.warning {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .badge.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .error-banner {
+            display: none;
+            background: var(--color-background-secondary, #ffe8e6);
+            border: 1px solid var(--color-error, #ffb3aa);
+            color: var(--color-error, #c0392b);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                justify-content: stretch;
+            }
+
+            .actions button {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Pantallas de estado globales -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="error-screen" id="errorScreen">
+        <div class="error-content">
+            <h2>Error de Autenticación</h2>
+            <p id="errorMessage">No tiene permisos para acceder a esta página.</p>
+            <button onclick="window.location.href='/login.html'" class="btn">Ir al Login</button>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebarContainer"></div>
+
+    <!-- Contenido principal -->
+    <div class="main-content" id="mainContent" style="display: none;">
+        <div class="container">
+            <div class="page-header">
+                <h1>Reportes y Estadísticas</h1>
+                <p>Visualiza el rendimiento de citas y notificaciones</p>
+            </div>
+
+            <!-- Controles -->
+            <div class="form-container">
+                <div class="controls-grid">
+                    <div class="control">
+                        <label for="startDate">Fecha inicio</label>
+                        <input type="datetime-local" id="startDate" />
+                    </div>
+                    <div class="control">
+                        <label for="endDate">Fecha fin</label>
+                        <input type="datetime-local" id="endDate" />
+                    </div>
+                </div>
+                <div class="actions">
+                    <button id="btnActualizar" class="btn btn-primary">Actualizar Reporte</button>
+                </div>
+                <div id="errorBanner" class="error-banner"></div>
+            </div>
+
+            <!-- KPIs -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">Total Citas</div>
+                    <div class="kpi-value" id="kpiCitas">-</div>
+                    <div class="kpi-trend">En el periodo seleccionado</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Total Notificaciones</div>
+                    <div class="kpi-value" id="kpiNotificaciones">-</div>
+                    <div class="kpi-trend">Enviadas a pacientes</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Ingresos Totales</div>
+                    <div class="kpi-value" id="kpiIngresos">-</div>
+                    <div class="kpi-trend">Calculado de citas finalizadas</div>
+                </div>
+            </div>
+
+            <!-- Gráficas -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Citas por Día</div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="chartCitasDia"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Tendencia de Ingresos</div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="chartIngresos"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Estado de Notificaciones</div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="chartNotificaciones"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Citas por Doctora</div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="chartCitasDoctora"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Citas por Motivo</div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="chartCitasMotivo"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tablas de Datos -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="citas">Citas Recientes</button>
+                <button class="tab-btn" data-tab="notificaciones">Notificaciones Recientes</button>
+            </div>
+
+            <div class="table-container active" id="tab-citas">
+                <table id="tablaCitas">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Motivo</th>
+                            <th>Doctora</th>
+                            <th>Paciente</th>
+                            <th>Valor Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="citasBody"></tbody>
+                </table>
+            </div>
+
+            <div class="table-container" id="tab-notificaciones">
+                <table id="tablaNotificaciones">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Paciente</th>
+                            <th>Estado</th>
+                            <th>Mensaje</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notificacionesBody"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { isAuthenticated, getCurrentUser, requireAuth } from './utils/session.js';
+        import { createSidebar } from './components/sidebar.js';
+
+        const API_CITAS = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/appointment';
+        const API_NOTIFICACIONES = 'https://n8n.srv1065547.hstgr.cloud/webhook/api/notifications';
+
+        // Referencias DOM
+        const loadingScreen = document.getElementById('loadingScreen');
+        const errorScreen = document.getElementById('errorScreen');
+        const mainContent = document.getElementById('mainContent');
+        const sidebarContainer = document.getElementById('sidebarContainer');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const btnActualizar = document.getElementById('btnActualizar');
+        const errorBanner = document.getElementById('errorBanner');
+
+        // KPIs DOM
+        const kpiCitas = document.getElementById('kpiCitas');
+        const kpiNotificaciones = document.getElementById('kpiNotificaciones');
+        const kpiIngresos = document.getElementById('kpiIngresos');
+
+        // Charts Instances
+        let chartCitasDia = null;
+        let chartNotificaciones = null;
+        let chartIngresos = null;
+        let chartCitasDoctora = null;
+        let chartCitasMotivo = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                if (!requireAuth(window.location.pathname)) {
+                    loadingScreen.style.display = 'none';
+                    errorScreen.style.display = 'flex';
+                    return;
+                }
+
+                // Sidebar
+                const currentUser = getCurrentUser();
+                const sidebarElement = createSidebar({ user: currentUser, activeItem: 'reportes', collapsible: true });
+                sidebarContainer.appendChild(sidebarElement);
+
+                loadingScreen.style.display = 'none';
+                mainContent.style.display = 'block';
+
+                // Default Range (Last 7 days)
+                const now = new Date();
+                const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                startDateInput.value = toInputDateTimeLocal(weekAgo);
+                endDateInput.value = toInputDateTimeLocal(now);
+
+                // Event Listeners
+                btnActualizar.addEventListener('click', fetchData);
+
+                // Tabs logic
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.table-container').forEach(t => t.classList.remove('active'));
+                        btn.classList.add('active');
+                        document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                    });
+                });
+
+                // Initial Fetch
+                await fetchData();
+
+            } catch (error) {
+                console.error('Error initializing reports page:', error);
+                loadingScreen.style.display = 'none';
+                errorScreen.style.display = 'flex';
+                document.getElementById('errorMessage').textContent = 'Error al cargar la página.';
+            }
+        });
+
+        async function fetchData() {
+            errorBanner.style.display = 'none';
+            const { startStr, endStr, error } = getValidatedRange();
+
+            if (error) {
+                errorBanner.textContent = error;
+                errorBanner.style.display = 'block';
+                return;
+            }
+
+            btnActualizar.disabled = true;
+            btnActualizar.innerHTML = '<span class="loading-spinner" style="width: 16px; height: 16px; border-width: 2px;"></span> Cargando...';
+
+            try {
+                const [citasResp, notifResp] = await Promise.all([
+                    fetch(`${API_CITAS}?start_date=${encodeURIComponent(startStr)}&end_date=${encodeURIComponent(endStr)}`),
+                    fetch(`${API_NOTIFICACIONES}?start_date=${encodeURIComponent(startStr)}&end_date=${encodeURIComponent(endStr)}`)
+                ]);
+
+                if (!citasResp.ok || !notifResp.ok) throw new Error('Error al consultar APIs');
+
+                const citas = await citasResp.json();
+                const notificaciones = await notifResp.json();
+
+                updateDashboard(citas, notificaciones);
+
+            } catch (err) {
+                console.error(err);
+                errorBanner.textContent = 'Error al cargar datos. Verifique su conexión.';
+                errorBanner.style.display = 'block';
+            } finally {
+                btnActualizar.disabled = false;
+                btnActualizar.textContent = 'Actualizar Reporte';
+            }
+        }
+
+        function updateDashboard(citas, notificaciones) {
+            // 1. Update KPIs
+            kpiCitas.textContent = citas.length;
+            kpiNotificaciones.textContent = notificaciones.length;
+
+            const totalIngresos = citas.reduce((sum, c) => {
+                const val = parseFloat(c.valor_total);
+                return sum + (isNaN(val) ? 0 : val);
+            }, 0);
+            kpiIngresos.textContent = formatMoney(totalIngresos);
+
+            // 2. Update Tables
+            renderCitasTable(citas);
+            renderNotificacionesTable(notificaciones);
+
+            // 3. Update Charts
+            updateCharts(citas, notificaciones);
+        }
+
+        function updateCharts(citas, notificaciones) {
+            // Process Data for Citas per Day
+            const citasMap = new Map();
+
+            citas.forEach(c => {
+                if (!c.fecha) return;
+                const dateObj = new Date(c.fecha);
+                // Use YYYY-MM-DD for sorting key
+                const dateKey = dateObj.toISOString().split('T')[0];
+
+                if (!citasMap.has(dateKey)) {
+                    citasMap.set(dateKey, { count: 0, revenue: 0, dateObj });
+                }
+                const entry = citasMap.get(dateKey);
+                entry.count += 1;
+                const val = parseFloat(c.valor_total);
+                entry.revenue += (isNaN(val) ? 0 : val);
+            });
+
+            // Sort by date key
+            const sortedKeys = Array.from(citasMap.keys()).sort();
+
+            const labels = sortedKeys.map(k => {
+                const d = citasMap.get(k).dateObj;
+                return `${d.getDate()}/${d.getMonth() + 1}`;
+            });
+            const dataCount = sortedKeys.map(k => citasMap.get(k).count);
+            const dataRevenue = sortedKeys.map(k => citasMap.get(k).revenue);
+
+            // Common Chart Options
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                }
+            };
+
+            // Chart: Citas por Día
+            const ctxCitas = document.getElementById('chartCitasDia').getContext('2d');
+            if (chartCitasDia) chartCitasDia.destroy();
+
+            chartCitasDia = new Chart(ctxCitas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Cantidad de Citas',
+                        data: dataCount,
+                        backgroundColor: '#00bfae',
+                        borderRadius: 6,
+                        barThickness: 'flex',
+                        maxBarThickness: 40
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Chart: Ingresos
+            const ctxIngresos = document.getElementById('chartIngresos').getContext('2d');
+            if (chartIngresos) chartIngresos.destroy();
+
+            chartIngresos = new Chart(ctxIngresos, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ingresos (COP)',
+                        data: dataRevenue,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { borderDash: [2, 4] },
+                            ticks: {
+                                callback: function (value) {
+                                    return new Intl.NumberFormat('es-CO', { notation: "compact", compactDisplay: "short" }).format(value);
+                                }
+                            }
+                        },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        ...commonOptions.plugins,
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Process Data for Notifications Status
+            const statusCounts = {};
+            notificaciones.forEach(n => {
+                const status = n.estado || 'Desconocido';
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
+            });
+
+            // Chart: Notificaciones
+            const ctxNotif = document.getElementById('chartNotificaciones').getContext('2d');
+            if (chartNotificaciones) chartNotificaciones.destroy();
+
+            chartNotificaciones = new Chart(ctxNotif, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusCounts).map(s => s.charAt(0).toUpperCase() + s.slice(1)),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#9ca3af'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+
+            // Process Data for Citas por Doctora
+            const doctorCounts = {};
+            citas.forEach(c => {
+                const doc = c.nombre_doctora || 'Sin Asignar';
+                doctorCounts[doc] = (doctorCounts[doc] || 0) + 1;
+            });
+
+            // Chart: Citas por Doctora
+            const ctxDoctora = document.getElementById('chartCitasDoctora').getContext('2d');
+            if (chartCitasDoctora) chartCitasDoctora.destroy();
+
+            chartCitasDoctora = new Chart(ctxDoctora, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(doctorCounts),
+                    datasets: [{
+                        data: Object.values(doctorCounts),
+                        backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e', '#10b981'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+
+            // Process Data for Citas por Motivo
+            const motivoCounts = {};
+            citas.forEach(c => {
+                const mot = c.motivo || 'Otro';
+                motivoCounts[mot] = (motivoCounts[mot] || 0) + 1;
+            });
+
+            // Chart: Citas por Motivo
+            const ctxMotivo = document.getElementById('chartCitasMotivo').getContext('2d');
+            if (chartCitasMotivo) chartCitasMotivo.destroy();
+
+            chartCitasMotivo = new Chart(ctxMotivo, {
+                type: 'bar',
+                indexAxis: 'y',
+                data: {
+                    labels: Object.keys(motivoCounts),
+                    datasets: [{
+                        label: 'Cantidad',
+                        data: Object.values(motivoCounts),
+                        backgroundColor: '#8b5cf6',
+                        borderRadius: 4,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        x: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function renderCitasTable(citas) {
+            const tbody = document.getElementById('citasBody');
+            tbody.innerHTML = citas.slice(0, 50).map(c => `
+        <tr>
+          <td>${formatDateDisplay(new Date(c.fecha))}</td>
+          <td>${escapeHtml(c.motivo)}</td>
+          <td>${escapeHtml(c.nombre_doctora)}</td>
+          <td>${escapeHtml(c.nombre_paciente)}</td>
+          <td style="font-weight: 500; color: var(--color-text-primary);">${formatMoney(c.valor_total)}</td>
+        </tr>
+      `).join('');
+        }
+
+        function renderNotificacionesTable(notificaciones) {
+            const tbody = document.getElementById('notificacionesBody');
+            tbody.innerHTML = notificaciones.slice(0, 50).map(n => {
+                let badgeClass = 'info';
+                if (n.estado === 'enviado') badgeClass = 'success';
+                else if (n.estado === 'error' || n.estado === 'fallido') badgeClass = 'error';
+                else if (n.estado === 'pendiente') badgeClass = 'warning';
+
+                return `
+        <tr>
+          <td>${formatDateDisplay(new Date(n.datetime))}</td>
+          <td>${escapeHtml(n.nombre_paciente)}</td>
+          <td><span class="badge ${badgeClass}">${escapeHtml(n.estado)}</span></td>
+          <td title="${escapeHtml(n.message)}">${escapeHtml(n.message).substring(0, 60)}${n.message.length > 60 ? '...' : ''}</td>
+        </tr>
+      `}).join('');
+        }
+
+        // Utils
+        function getValidatedRange() {
+            const startVal = startDateInput.value;
+            const endVal = endDateInput.value;
+            if (!startVal || !endVal) return { error: 'Seleccione fechas.' };
+
+            const startDate = new Date(startVal);
+            const endDate = new Date(endVal);
+
+            if (startDate > endDate) return { error: 'Fecha inicio mayor a fin.' };
+
+            return {
+                startStr: formatApiDate(startDate),
+                endStr: formatApiDate(endDate)
+            };
+        }
+
+        function formatApiDate(date) {
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:00`;
+        }
+
+        function toInputDateTimeLocal(date) {
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+
+        function formatDateDisplay(date) {
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+
+        function formatMoney(val) {
+            try {
+                const num = typeof val === 'string' ? parseFloat(val) : Number(val);
+                if (isNaN(num)) return '$0';
+                return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(num);
+            } catch {
+                return '$0';
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+    </script>
+</body>
+
+</html>
