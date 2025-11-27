@@ -3,7 +3,7 @@ version: '3.9'
 services:
   medical-appointments-web:
     build: .
-    image: medical-appointments-web:1.0.0
+    image: medical-appointments-web:1.0.1
     container_name: medical-appointments-web
     restart: always
     labels:
